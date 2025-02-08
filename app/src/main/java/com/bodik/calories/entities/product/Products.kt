@@ -24,9 +24,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.bodik.calories.entities.Product
 
 @Composable
-fun Products() {
+fun Products(products: List<Product>) {
 
 //    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
 //        Button(
@@ -80,5 +81,5 @@ fun Products() {
         }
     }
     NewProduct(isOpen = openNewProduct)
-    ProductsList()
+    ProductsList(products = products, searchQuery = searchQuery)
 }

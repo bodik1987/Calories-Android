@@ -35,13 +35,18 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.graphics.Color
+import com.bodik.calories.entities.Product
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddProductToDayProducts(isOpen: MutableState<Boolean>) {
+fun AddProductToDayProducts(isOpen: MutableState<Boolean>, selectedProduct: Product?) {
     val openEditProductDialog = remember { mutableStateOf(false) }
 
-    if (isOpen.value) {
+    if (isOpen.value && selectedProduct != null) {
+
+        var weight by remember { mutableStateOf("") }
+        var calories by remember { mutableStateOf("0") }
 
         val focusRequester = remember { FocusRequester() }
         LaunchedEffect(Unit) { focusRequester.requestFocus() }
@@ -64,15 +69,31 @@ fun AddProductToDayProducts(isOpen: MutableState<Boolean>) {
                         .padding(top = 8.dp)
                 ) {
                     Text(
-                        "Добавить вес", style = TextStyle(fontSize = 24.sp)
+                        selectedProduct.title, style = TextStyle(fontSize = 24.sp)
+                    )
+
+                    fun calculateCalories(weight: String): String {
+                        val weightFloat = weight.toFloatOrNull()
+                        return if (weightFloat != null) {
+                            ((selectedProduct.calories / 100f) * weightFloat).toInt()
+                                .toString()
+                        } else {
+                            "0"
+                        }
+                    }
+
+                    Text(
+                        "Калории: $calories ккал",
+                        modifier = Modifier.padding(top = 8.dp)
                     )
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    var weight by remember { mutableStateOf("") }
-
                     OutlinedTextField(
                         value = weight,
-                        onValueChange = { weight = it },
+                        onValueChange = {
+                            weight = it
+                            calories = calculateCalories(it)
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .focusRequester(focusRequester),

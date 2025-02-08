@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -29,14 +30,32 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.material3.TextButton
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
+import com.bodik.calories.entities.PreferencesHelper
+import com.bodik.calories.entities.calculateTarget
+import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserMeasurements(isOpen: MutableState<Boolean>) {
+fun UserMeasurements(isOpen: MutableState<Boolean>, preferencesHelper: PreferencesHelper) {
     if (isOpen.value) {
+
+        var userWeight by remember { mutableStateOf("") }
+        var age by remember { mutableStateOf("") }
+        var target by remember { mutableStateOf("") }
+        
+        LaunchedEffect(isOpen.value) {
+            if (isOpen.value) {
+                val userData = preferencesHelper.loadUserData()
+                userWeight = userData.weight
+                age = userData.age
+                target = calculateTarget(userWeight, age)
+            }
+        }
+
         BasicAlertDialog(
             onDismissRequest = { isOpen.value = false }
         ) {
@@ -57,28 +76,39 @@ fun UserMeasurements(isOpen: MutableState<Boolean>) {
                     )
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    var userWeight by remember { mutableStateOf("") }
-                    var age by remember { mutableStateOf("") }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        OutlinedTextField(
+                            value = age,
+                            onValueChange = {
+                                age = it
+                                target = calculateTarget(userWeight, age)
+                            },
+                            modifier = Modifier.weight(1f),
+                            shape = RoundedCornerShape(12.dp),
+                            label = { Text("Возраст") },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        OutlinedTextField(
+                            value = userWeight,
+                            onValueChange = {
+                                userWeight = it
+                                target = calculateTarget(userWeight, age)
+                            },
+                            modifier = Modifier.weight(1f),
+                            shape = RoundedCornerShape(12.dp),
+                            label = { Text("Вес") },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                        )
+                    }
 
-                    OutlinedTextField(
-                        value = age,
-                        onValueChange = { age = it },
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        shape = RoundedCornerShape(12.dp),
-                        label = { Text("Возраст") },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    OutlinedTextField(
-                        value = userWeight,
-                        onValueChange = { userWeight = it },
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        shape = RoundedCornerShape(12.dp),
-                        label = { Text("Вес") },
-                        suffix = { Text("кг") },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    Text(
+                        "Ваша цель на день $target калорий", modifier = Modifier
+                            .padding(top = 16.dp)
                     )
 
                     Row(
@@ -94,12 +124,29 @@ fun UserMeasurements(isOpen: MutableState<Boolean>) {
                             Text("Отменить")
                         }
                         FilledTonalButton(
-                            onClick = { isOpen.value = false },
+                            onClick = {
+                                val weightFloat = userWeight.toFloatOrNull()
+                                val ageFloat = age.toFloatOrNull()
+
+                                if (weightFloat != null && ageFloat != null) {
+                                    val newTarget =
+                                        (88 + 13 * weightFloat + 4.2 * 178 - 5.7 * ageFloat).roundToInt()
+                                            .toString()
+
+                                    preferencesHelper.saveUserData(
+                                        weight = userWeight,
+                                        age = age
+                                    )
+
+                                    target = newTarget
+                                }
+
+                                isOpen.value = false
+                            },
                         ) {
                             Text("Изменить")
                         }
                     }
-
                 }
             }
         }
