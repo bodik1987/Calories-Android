@@ -35,8 +35,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.focus.FocusRequester
+import com.bodik.calories.entities.DayProduct
 import com.bodik.calories.entities.PreferencesHelper
 import com.bodik.calories.entities.Product
+import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,7 +46,9 @@ fun AddProductToDayProducts(
     isOpen: MutableState<Boolean>,
     selectedProduct: Product?,
     productsState: MutableState<List<Product>>,
-    preferencesHelper: PreferencesHelper
+    preferencesHelper: PreferencesHelper,
+    selectedDay: Int,
+    dayProductsState: MutableState<List<DayProduct>>
 ) {
     val openEditProductDialog = remember { mutableStateOf(false) }
 
@@ -80,7 +84,7 @@ fun AddProductToDayProducts(
                     fun calculateCalories(weight: String): String {
                         val weightFloat = weight.toFloatOrNull()
                         return if (weightFloat != null) {
-                            ((selectedProduct.calories / 100f) * weightFloat).toInt()
+                            ((selectedProduct.calories.toInt() / 100f) * weightFloat).toInt()
                                 .toString()
                         } else {
                             "0"
@@ -95,9 +99,16 @@ fun AddProductToDayProducts(
 
                     OutlinedTextField(
                         value = weight,
-                        onValueChange = {
-                            weight = it
-                            calories = calculateCalories(it)
+                        onValueChange = { newValue ->
+                            // Only digit & .
+                            val filteredValue = newValue.filter { it.isDigit() || it == '.' }
+                            // . not first & repeat
+                            if (filteredValue.count { it == '.' } <= 1 && !filteredValue.startsWith(
+                                    "."
+                                )) {
+                                weight = filteredValue
+                            }
+                            calories = calculateCalories(weight)
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -125,7 +136,20 @@ fun AddProductToDayProducts(
                         }
 
                         FilledTonalButton(
-                            onClick = { isOpen.value = false },
+                            enabled = weight.isNotEmpty(),
+                            onClick = {
+                                val newDayProduct = DayProduct(
+                                    id = UUID.randomUUID().toString(),
+                                    day = selectedDay,
+                                    weight = weight,
+                                    product = selectedProduct
+                                )
+                                val updatedDayProducts = dayProductsState.value + newDayProduct
+                                preferencesHelper.saveDayProducts(updatedDayProducts)
+                                dayProductsState.value = updatedDayProducts
+                                weight = ""
+                                isOpen.value = false
+                            },
                         ) {
                             Text("Добавить")
                         }

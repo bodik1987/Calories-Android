@@ -2,15 +2,24 @@ package com.bodik.calories.entities
 
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import kotlin.math.roundToInt
 
 class PreferencesHelper(context: Context) {
     private val sharedPreferences: SharedPreferences =
         context.getSharedPreferences("user_data", Context.MODE_PRIVATE)
 
+    //    Dark theme
+    fun getThemeMode(): ThemeMode {
+        val mode = sharedPreferences.getString("theme_mode", ThemeMode.SYSTEM.name)
+            ?: ThemeMode.SYSTEM.name
+        return ThemeMode.valueOf(mode)
+    }
 
+    fun setThemeMode(mode: ThemeMode) {
+        sharedPreferences.edit().putString("theme_mode", mode.name).apply()
+    }
+
+    //    Selected day
     fun updateSelectedDay(day: Int) {
         with(sharedPreferences.edit()) {
             putString("selectedDay", day.toString())
@@ -23,7 +32,7 @@ class PreferencesHelper(context: Context) {
         return selectedDay.toInt()
     }
 
-    // Сохранить вес, возраст и целевую величину
+    // User data
     fun saveUserData(weight: String, age: String) {
         val target = if (weight.isNotEmpty() && age.isNotEmpty()) {
             (weight.toFloat() * age.toFloat()).roundToInt().toString()
@@ -34,12 +43,11 @@ class PreferencesHelper(context: Context) {
         with(sharedPreferences.edit()) {
             putString("weight", weight)
             putString("age", age)
-            putString("target", target) // Сохраняем target
+            putString("target", target)
             apply()
         }
     }
 
-    // Загрузить данные пользователя
     fun loadUserData(): UserData {
         val weight = sharedPreferences.getString("weight", "75") ?: "75"
         val age = sharedPreferences.getString("age", "37") ?: "37"
@@ -48,7 +56,7 @@ class PreferencesHelper(context: Context) {
         return UserData(weight, age, target)
     }
 
-    // Сохранить список продуктов
+    // Products
     fun saveProducts(products: List<Product>) {
         val editor = sharedPreferences.edit()
         editor.putInt("product_count", products.size)
@@ -56,13 +64,12 @@ class PreferencesHelper(context: Context) {
         products.forEachIndexed { index, product ->
             editor.putString("product_${index + 1}_id", product.id)
             editor.putString("product_${index + 1}_title", product.title)
-            editor.putInt("product_${index + 1}_calories", product.calories)
+            editor.putString("product_${index + 1}_calories", product.calories)
             editor.putBoolean("product_${index + 1}_isFavorites", product.isFavorites)
         }
         editor.apply()
     }
 
-    // Загрузить список продуктов
     fun loadProducts(): List<Product> {
         val productCount = sharedPreferences.getInt("product_count", 0)
         val products = mutableListOf<Product>()
@@ -70,35 +77,35 @@ class PreferencesHelper(context: Context) {
         for (i in 1..productCount) {
             val id = sharedPreferences.getString("product_${i}_id", "") ?: ""
             val title = sharedPreferences.getString("product_${i}_title", "") ?: ""
-            val calories = sharedPreferences.getInt("product_${i}_calories", 0)
+            val calories = sharedPreferences.getString("product_${i}_calories", "0") ?: "0"
             val isFavorites = sharedPreferences.getBoolean("product_${i}_isFavorites", false)
 
-            if (id.isNotEmpty() && title.isNotEmpty() && calories != 0) {
+            if (id.isNotEmpty() && title.isNotEmpty() && calories.isNotEmpty()) {
                 products.add(Product(id, title, calories, isFavorites))
             }
         }
         return products
     }
 
-    // Загрузить список еды за день
-    fun loadProductsToEat(): List<ProductToEat> {
-        val productsToEatCount = sharedPreferences.getInt("productsToEat", 0)
-        val productsToEat = mutableListOf<ProductToEat>()
+    // DayProduct
+    fun loadDayProducts(): List<DayProduct> {
+        val dayProductsCount = sharedPreferences.getInt("dayProducts", 0)
+        val dayProducts = mutableListOf<DayProduct>()
 
-        for (i in 1..productsToEatCount) {
-            val id = sharedPreferences.getString("productToEat_${i}_id", "") ?: ""
-            val day = sharedPreferences.getInt("productToEat_${i}_day", 0)
-            val productId = sharedPreferences.getString("productToEat_${i}_product_id", "") ?: ""
-            val title = sharedPreferences.getString("productToEat_${i}_product_title", "") ?: ""
+        for (i in 1..dayProductsCount) {
+            val id = sharedPreferences.getString("dayProduct_${i}_id", "") ?: ""
+            val day = sharedPreferences.getInt("dayProduct_${i}_day", 0)
+            val productId = sharedPreferences.getString("dayProduct_${i}_product_id", "") ?: ""
+            val title = sharedPreferences.getString("dayProduct_${i}_product_title", "") ?: ""
             val calories =
-                sharedPreferences.getInt("productToEat_${i}_product_calories", 0)
+                sharedPreferences.getString("dayProduct_${i}_product_calories", "0") ?: "0"
             val isFavorites =
-                sharedPreferences.getBoolean("productToEat_${i}_product_isFavorites", false)
-            val weight = sharedPreferences.getInt("productToEat_${i}_weight", 0)
+                sharedPreferences.getBoolean("dayProduct_${i}_product_isFavorites", false)
+            val weight = sharedPreferences.getString("dayProduct_${i}_weight", "0") ?: "0"
 
-            if (id.isNotEmpty() && day != 0 && title.isNotEmpty() && weight != 0) {
-                productsToEat.add(
-                    ProductToEat(
+            if (id.isNotEmpty() && day != 0 && title.isNotEmpty() && weight.isNotEmpty()) {
+                dayProducts.add(
+                    DayProduct(
                         id,
                         day,
                         Product(productId, title, calories, isFavorites),
@@ -107,34 +114,27 @@ class PreferencesHelper(context: Context) {
                 )
             }
         }
-        return productsToEat
+        return dayProducts
     }
 
-    // Сохранить список еды за день
-    fun saveProductsToEat(products: List<ProductToEat>) {
+    fun saveDayProducts(dayProducts: List<DayProduct>) {
         val editor = sharedPreferences.edit()
-        editor.putInt("productsToEat", products.size)
+        editor.putInt("dayProducts", dayProducts.size)
 
-        products.forEachIndexed { index, item ->
-            editor.putString("productToEat_${index + 1}_id", item.id)
-            editor.putInt("productToEat_${index + 1}_day", item.day)
-            editor.putString("productToEat_${index + 1}_product_id", item.product.id)
-            editor.putString("productToEat_${index + 1}_product_title", item.product.title)
-            editor.putInt("productToEat_${index + 1}_product_calories", item.product.calories)
+        dayProducts.forEachIndexed { index, item ->
+            editor.putString("dayProduct_${index + 1}_id", item.id)
+            editor.putInt("dayProduct_${index + 1}_day", item.day)
+            editor.putString("dayProduct_${index + 1}_product_id", item.product.id)
+            editor.putString("dayProduct_${index + 1}_product_title", item.product.title)
+            editor.putString("dayProduct_${index + 1}_product_calories", item.product.calories)
             editor.putBoolean(
-                "productToEat_${index + 1}_product_isFavorites",
+                "dayProduct_${index + 1}_product_isFavorites",
                 item.product.isFavorites
             )
-            editor.putInt("productToEat_${index + 1}_weight", item.weight)
+            editor.putString("dayProduct_${index + 1}_weight", item.weight)
         }
         editor.apply()
     }
 }
 
 
-data class ProductToEat(
-    val id: String,
-    val day: Int,
-    val product: Product,
-    val weight: Int
-)

@@ -46,7 +46,7 @@ fun UserMeasurements(isOpen: MutableState<Boolean>, preferencesHelper: Preferenc
         var userWeight by remember { mutableStateOf("") }
         var age by remember { mutableStateOf("") }
         var target by remember { mutableStateOf("") }
-        
+
         LaunchedEffect(isOpen.value) {
             if (isOpen.value) {
                 val userData = preferencesHelper.loadUserData()
@@ -83,8 +83,15 @@ fun UserMeasurements(isOpen: MutableState<Boolean>, preferencesHelper: Preferenc
                     ) {
                         OutlinedTextField(
                             value = age,
-                            onValueChange = {
-                                age = it
+                            onValueChange = { newValue ->
+                                // Only digit & .
+                                val filteredValue = newValue.filter { it.isDigit() || it == '.' }
+                                // . not first & repeat
+                                if (filteredValue.count { it == '.' } <= 1 && !filteredValue.startsWith(
+                                        "."
+                                    )) {
+                                    age = filteredValue
+                                }
                                 target = calculateTarget(userWeight, age)
                             },
                             modifier = Modifier.weight(1f),
@@ -95,8 +102,15 @@ fun UserMeasurements(isOpen: MutableState<Boolean>, preferencesHelper: Preferenc
                         Spacer(modifier = Modifier.width(8.dp))
                         OutlinedTextField(
                             value = userWeight,
-                            onValueChange = {
-                                userWeight = it
+                            onValueChange = { newValue ->
+                                // Only digit & .
+                                val filteredValue = newValue.filter { it.isDigit() || it == '.' }
+                                // . not first & repeat
+                                if (filteredValue.count { it == '.' } <= 1 && !filteredValue.startsWith(
+                                        "."
+                                    )) {
+                                    userWeight = filteredValue
+                                }
                                 target = calculateTarget(userWeight, age)
                             },
                             modifier = Modifier.weight(1f),
@@ -123,23 +137,22 @@ fun UserMeasurements(isOpen: MutableState<Boolean>, preferencesHelper: Preferenc
                         ) {
                             Text("Отменить")
                         }
+
                         FilledTonalButton(
+                            enabled = userWeight.isNotEmpty() && age.isNotEmpty(),
                             onClick = {
-                                val weightFloat = userWeight.toFloatOrNull()
-                                val ageFloat = age.toFloatOrNull()
+                                val weightDouble = userWeight.toDoubleOrNull() ?: 0.0
+                                val ageDouble = age.toDoubleOrNull() ?: 0.0
+                                val newTarget =
+                                    (88 + 13 * weightDouble + 4.2 * 178 - 5.7 * ageDouble).roundToInt()
+                                        .toString()
 
-                                if (weightFloat != null && ageFloat != null) {
-                                    val newTarget =
-                                        (88 + 13 * weightFloat + 4.2 * 178 - 5.7 * ageFloat).roundToInt()
-                                            .toString()
+                                preferencesHelper.saveUserData(
+                                    weight = userWeight,
+                                    age = age
+                                )
 
-                                    preferencesHelper.saveUserData(
-                                        weight = userWeight,
-                                        age = age
-                                    )
-
-                                    target = newTarget
-                                }
+                                target = newTarget
 
                                 isOpen.value = false
                             },

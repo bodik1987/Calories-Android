@@ -8,9 +8,16 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import com.bodik.calories.entities.DayProduct
+import com.bodik.calories.entities.PreferencesHelper
 
 @Composable
-fun CleanDay(isOpen: MutableState<Boolean>) {
+fun CleanDay(
+    isOpen: MutableState<Boolean>,
+    restDayProducts: List<DayProduct>,
+    preferencesHelper: PreferencesHelper,
+    dayProductsState: MutableState<List<DayProduct>>
+) {
     if (isOpen.value) {
         AlertDialog(
             onDismissRequest = {
@@ -25,6 +32,8 @@ fun CleanDay(isOpen: MutableState<Boolean>) {
             },
             confirmButton = {
                 TextButton(onClick = {
+                    preferencesHelper.saveDayProducts(restDayProducts)
+                    dayProductsState.value = preferencesHelper.loadDayProducts()
                     isOpen.value = false
                 }) { Text("Очистить") }
             },

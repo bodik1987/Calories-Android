@@ -8,9 +8,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import com.bodik.calories.entities.DayProduct
+import com.bodik.calories.entities.PreferencesHelper
+import com.bodik.calories.entities.Product
 
 @Composable
-fun DeleteDayProduct(isOpen: MutableState<Boolean>, isParentOpen: MutableState<Boolean>) {
+fun DeleteDayProduct(
+    isOpen: MutableState<Boolean>, isParentOpen: MutableState<Boolean>, id: String,
+    preferencesHelper: PreferencesHelper, dayProductsState: MutableState<List<DayProduct>>
+) {
     if (isOpen.value) {
         AlertDialog(
             onDismissRequest = {
@@ -25,6 +31,10 @@ fun DeleteDayProduct(isOpen: MutableState<Boolean>, isParentOpen: MutableState<B
             },
             confirmButton = {
                 TextButton(onClick = {
+                    val updatedDayProducts =
+                        dayProductsState.value.filter { dayProduct: DayProduct -> dayProduct.id != id }
+                    preferencesHelper.saveDayProducts(updatedDayProducts)
+                    dayProductsState.value = updatedDayProducts
                     isOpen.value = false
                     isParentOpen.value = false
                 }) { Text("Удалить") }

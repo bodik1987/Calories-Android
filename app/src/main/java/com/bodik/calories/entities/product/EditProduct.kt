@@ -40,8 +40,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
 import com.bodik.calories.entities.PreferencesHelper
 import com.bodik.calories.entities.Product
-import java.util.UUID
-
+import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -96,13 +95,23 @@ fun EditProduct(
                         modifier = Modifier
                             .fillMaxWidth()
                             .focusRequester(focusRequester),
+                        singleLine = true,
                         shape = RoundedCornerShape(12.dp),
                         label = { Text("Название продукта") },
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
                         value = calories,
-                        onValueChange = { calories = it },
+                        onValueChange = { newValue ->
+                            // Only digit & .
+                            val filteredValue = newValue.filter { it.isDigit() || it == '.' }
+                            // . not first & repeat
+                            if (filteredValue.count { it == '.' } <= 1 && !filteredValue.startsWith(
+                                    "."
+                                )) {
+                                calories = filteredValue
+                            }
+                        },
                         modifier = Modifier
                             .fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
@@ -144,34 +153,32 @@ fun EditProduct(
                             Text("Удалить")
                         }
                         FilledTonalButton(
+                            enabled = title.isNotEmpty() && calories.isNotEmpty(),
                             onClick = {
-                                if (title.isNotEmpty() && calories.isNotEmpty()) {
-                                    val updatedProduct = Product(
-                                        id = UUID.randomUUID().toString(),
-                                        title = title,
-                                        calories = calories.toInt(),
-                                        isFavorites = checked
-                                    )
-                                    val updatedProducts = productsState.value.map { product ->
-                                        if (product.id == selectedProduct!!.id) {
-                                            updatedProduct
-                                        } else {
-                                            product
-                                        }
+                                val updatedProduct = Product(
+                                    id = selectedProduct!!.id,
+                                    title = title,
+                                    calories = calories.toFloat().roundToInt().toString(),
+                                    isFavorites = checked
+                                )
+                                val updatedProducts = productsState.value.map { product ->
+                                    if (product.id == selectedProduct.id) {
+                                        updatedProduct
+                                    } else {
+                                        product
                                     }
-                                    preferencesHelper.saveProducts(updatedProducts)
-                                    productsState.value = updatedProducts
-                                    title = ""
-                                    calories = ""
-                                    checked = false
                                 }
+                                preferencesHelper.saveProducts(updatedProducts)
+                                productsState.value = updatedProducts
+                                title = ""
+                                calories = ""
+                                checked = false
                                 isOpen.value = false
                             },
                         ) {
                             Text("Изменить")
                         }
                     }
-
                 }
             }
             if (selectedProduct != null) {

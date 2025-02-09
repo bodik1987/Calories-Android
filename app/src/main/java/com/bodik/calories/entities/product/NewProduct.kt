@@ -1,6 +1,5 @@
 package com.bodik.calories.entities.product
 
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -43,6 +42,7 @@ import androidx.compose.ui.focus.FocusRequester
 import com.bodik.calories.entities.PreferencesHelper
 import com.bodik.calories.entities.Product
 import java.util.UUID
+import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -86,6 +86,7 @@ fun NewProduct(
                         modifier = Modifier
                             .fillMaxWidth()
                             .focusRequester(focusRequester),
+                        singleLine = true,
                         shape = RoundedCornerShape(12.dp),
                         keyboardOptions = KeyboardOptions(
                             capitalization = KeyboardCapitalization.Sentences
@@ -95,7 +96,17 @@ fun NewProduct(
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
                         value = calories,
-                        onValueChange = { calories = it },
+                        onValueChange = { newValue ->
+                            // Only digit & .
+                            val filteredValue = newValue.filter { it.isDigit() || it == '.' }
+                            // . not first & repeat
+                            if (filteredValue.count { it == '.' } <= 1 && !filteredValue.startsWith(
+                                    "."
+                                )) {
+                                calories = filteredValue
+                            }
+                        },
+                        singleLine = true,
                         modifier = Modifier
                             .fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
@@ -138,28 +149,26 @@ fun NewProduct(
                         }
 
                         FilledTonalButton(
+                            enabled = title.isNotEmpty() && calories.isNotEmpty(),
                             onClick = {
-                                if (title.isNotEmpty() && calories.isNotEmpty()) {
-                                    val newProduct = Product(
-                                        id = UUID.randomUUID().toString(),
-                                        title = title,
-                                        calories = calories.toInt(),
-                                        isFavorites = checked
-                                    )
-                                    val updatedProducts = products + newProduct
-                                    preferencesHelper.saveProducts(updatedProducts)
-                                    productsState.value = updatedProducts
-                                    title = ""
-                                    calories = ""
-                                    checked = false
-                                }
+                                val newProduct = Product(
+                                    id = UUID.randomUUID().toString(),
+                                    title = title,
+                                    calories = calories.toFloat().roundToInt().toString(),
+                                    isFavorites = checked
+                                )
+                                val updatedProducts = products + newProduct
+                                preferencesHelper.saveProducts(updatedProducts)
+                                productsState.value = updatedProducts
+                                title = ""
+                                calories = ""
+                                checked = false
                                 isOpen.value = false
                             },
                         ) {
                             Text("Добавить")
                         }
                     }
-
                 }
             }
         }

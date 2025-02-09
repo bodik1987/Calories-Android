@@ -18,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.bodik.calories.entities.DayProduct
 import com.bodik.calories.entities.PreferencesHelper
 import com.bodik.calories.entities.Product
 
@@ -25,10 +26,13 @@ import com.bodik.calories.entities.Product
 fun ProductsList(
     productsState: MutableState<List<Product>>,
     searchQuery: String,
-    preferencesHelper: PreferencesHelper
+    preferencesHelper: PreferencesHelper,
+    selectedDay: Int,
+    dayProductsState: MutableState<List<DayProduct>>
 ) {
     val openAddProductToDayProductsDialog = remember { mutableStateOf(false) }
     var selectedProduct by remember { mutableStateOf<Product?>(null) }
+
     LazyColumn {
         items(productsState.value.filter { it.title.contains(searchQuery, ignoreCase = true) }
             .sortedWith(compareByDescending<Product> { it.isFavorites }
@@ -46,7 +50,7 @@ fun ProductsList(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(it.title)
-                        Text(it.calories.toString())
+                        Text(it.calories)
                     }
                 },
                 colors =
@@ -60,6 +64,8 @@ fun ProductsList(
         isOpen = openAddProductToDayProductsDialog,
         selectedProduct = selectedProduct,
         productsState = productsState,
-        preferencesHelper = preferencesHelper
+        preferencesHelper = preferencesHelper,
+        selectedDay = selectedDay,
+        dayProductsState = dayProductsState
     )
 }

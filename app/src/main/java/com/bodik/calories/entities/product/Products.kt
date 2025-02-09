@@ -24,34 +24,25 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.bodik.calories.entities.DayProduct
 import com.bodik.calories.entities.PreferencesHelper
 import com.bodik.calories.entities.Product
 
 @Composable
-fun Products(productsState: MutableState<List<Product>>, preferencesHelper: PreferencesHelper) {
-
-//    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-//        Button(
-//            onClick = {
-//                scope
-//                    .launch { sheetState.hide() }
-//                    .invokeOnCompletion {
-//                        if (!sheetState.isVisible) {
-//                            isOpen.value = false
-//                        }
-//                    }
-//            }
-//        ) {
-//            Text("Hide Bottom Sheet")
-//        }
-//    }
+fun Products(
+    productsState: MutableState<List<Product>>,
+    preferencesHelper: PreferencesHelper,
+    selectedDay: Int,
+    dayProductsState: MutableState<List<DayProduct>>
+) {
     val openNewProduct = remember { mutableStateOf(false) }
     var searchQuery by remember { mutableStateOf("") }
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp)
+            .padding(bottom = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         OutlinedTextField(
@@ -60,7 +51,7 @@ fun Products(productsState: MutableState<List<Product>>, preferencesHelper: Pref
             modifier = Modifier
                 .weight(1f)
                 .padding(end = 16.dp),
-            shape = RoundedCornerShape(12.dp),
+            shape = RoundedCornerShape(16.dp),
             label = { Text("Поиск по названию") },
             leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
             trailingIcon = {
@@ -89,6 +80,8 @@ fun Products(productsState: MutableState<List<Product>>, preferencesHelper: Pref
     ProductsList(
         productsState = productsState,
         searchQuery = searchQuery,
-        preferencesHelper = preferencesHelper
+        preferencesHelper = preferencesHelper,
+        selectedDay = selectedDay,
+        dayProductsState = dayProductsState
     )
 }

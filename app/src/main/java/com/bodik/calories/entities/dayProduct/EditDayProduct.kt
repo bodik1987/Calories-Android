@@ -21,6 +21,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.MutableState
@@ -32,13 +33,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.sp
+import com.bodik.calories.entities.DayProduct
+import com.bodik.calories.entities.PreferencesHelper
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DayProduct(isOpen: MutableState<Boolean>) {
+fun EditDayProduct(
+    isOpen: MutableState<Boolean>,
+    selectedDayProduct: DayProduct?,
+    dayProductsState: MutableState<List<DayProduct>>,
+    preferencesHelper: PreferencesHelper
+) {
     if (isOpen.value) {
-
         val openDeleteDayProductDialog = remember { mutableStateOf(false) }
+
+        var weight by remember { mutableStateOf("") }
+
+        LaunchedEffect(isOpen.value) {
+            weight = selectedDayProduct?.weight ?: ""
+        }
 
         BasicAlertDialog(
             onDismissRequest = {
@@ -60,9 +73,23 @@ fun DayProduct(isOpen: MutableState<Boolean>) {
                     Text(
                         "Изменить продукт", style = TextStyle(fontSize = 24.sp)
                     )
+
+                    fun calculateCalories(weight: String): String {
+                        val weightDouble = weight.toDoubleOrNull() ?: 0.0
+                        return if (selectedDayProduct != null) {
+                            ((selectedDayProduct.product.calories.toInt() / 100f) * weightDouble).toInt()
+                                .toString()
+                        } else {
+                            "0"
+                        }
+                    }
+
+                    Text(
+                        "Калории: ${calculateCalories(weight)} ккал",
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    var weight by remember { mutableStateOf("") }
 
                     OutlinedTextField(
                         value = weight,
@@ -71,7 +98,7 @@ fun DayProduct(isOpen: MutableState<Boolean>) {
                             .fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
                         label = { Text("Вес продукта") },
-                        suffix = { Text("г") },
+//                        suffix = { Text("г") },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
 
@@ -90,18 +117,38 @@ fun DayProduct(isOpen: MutableState<Boolean>) {
                             Text("Удалить")
                         }
                         FilledTonalButton(
-                            onClick = { isOpen.value = false },
+                            enabled = weight.isNotEmpty(),
+                            onClick = {
+                                val updatedDayProduct =
+                                    selectedDayProduct!!.copy(weight = weight)
+                                val updatedDayProducts =
+                                    dayProductsState.value.map { dayProduct ->
+                                        if (dayProduct.id == selectedDayProduct.id) {
+                                            updatedDayProduct
+                                        } else {
+                                            dayProduct
+                                        }
+                                    }
+                                preferencesHelper.saveDayProducts(updatedDayProducts)
+                                dayProductsState.value = updatedDayProducts
+                                weight = ""
+                                isOpen.value = false
+                            },
                         ) {
                             Text("Обновить")
                         }
                     }
-
                 }
             }
-            DeleteDayProduct(
-                isOpen = openDeleteDayProductDialog,
-                isParentOpen = isOpen
-            )
+            if (selectedDayProduct != null) {
+                DeleteDayProduct(
+                    isOpen = openDeleteDayProductDialog,
+                    isParentOpen = isOpen,
+                    id = selectedDayProduct.id,
+                    preferencesHelper = preferencesHelper,
+                    dayProductsState = dayProductsState
+                )
+            }
         }
     }
 }
