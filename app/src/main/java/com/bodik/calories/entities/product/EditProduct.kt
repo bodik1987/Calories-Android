@@ -40,6 +40,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
 import com.bodik.calories.entities.PreferencesHelper
 import com.bodik.calories.entities.Product
+import java.util.UUID
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,6 +52,16 @@ fun EditProduct(
     preferencesHelper: PreferencesHelper
 ) {
     if (isOpen.value) {
+
+        var title by remember { mutableStateOf("") }
+        var calories by remember { mutableStateOf("") }
+        var checked by remember { mutableStateOf(false) }
+
+        LaunchedEffect(isOpen.value) {
+            title = selectedProduct?.title ?: ""
+            calories = selectedProduct?.calories?.toString() ?: ""
+            checked = selectedProduct?.isFavorites ?: false
+        }
 
         val focusRequester = remember { FocusRequester() }
         LaunchedEffect(Unit) { focusRequester.requestFocus() }
@@ -78,10 +89,6 @@ fun EditProduct(
                         "Изменить продукт", style = TextStyle(fontSize = 24.sp)
                     )
                     Spacer(modifier = Modifier.height(16.dp))
-
-                    var title by remember { mutableStateOf("") }
-                    var calories by remember { mutableStateOf("") }
-                    var checked by remember { mutableStateOf(false) }
 
                     OutlinedTextField(
                         value = title,
@@ -137,7 +144,29 @@ fun EditProduct(
                             Text("Удалить")
                         }
                         FilledTonalButton(
-                            onClick = { isOpen.value = false },
+                            onClick = {
+                                if (title.isNotEmpty() && calories.isNotEmpty()) {
+                                    val updatedProduct = Product(
+                                        id = UUID.randomUUID().toString(),
+                                        title = title,
+                                        calories = calories.toInt(),
+                                        isFavorites = checked
+                                    )
+                                    val updatedProducts = productsState.value.map { product ->
+                                        if (product.id == selectedProduct!!.id) {
+                                            updatedProduct
+                                        } else {
+                                            product
+                                        }
+                                    }
+                                    preferencesHelper.saveProducts(updatedProducts)
+                                    productsState.value = updatedProducts
+                                    title = ""
+                                    calories = ""
+                                    checked = false
+                                }
+                                isOpen.value = false
+                            },
                         ) {
                             Text("Изменить")
                         }
