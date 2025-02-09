@@ -34,4 +34,7 @@
     <string name="delete_product_confirmation">Ви впевнені, що хочете видалити продукт?</string>
     <string name="edit_product">Змінити продукт</string>
     <string name="update">Оновити</string>
+    <string name="empty_list">Список порожній</string>
+
+    <string name="fresh_cabbage">Капуста свіжа</string>
 </resources>

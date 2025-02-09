@@ -37,4 +37,7 @@
     <string name="delete_product_confirmation">Are you sure you want to delete the product?</string>
     <string name="edit_product">Edit product</string>
     <string name="update">Update</string>
+    <string name="empty_list">The list is empty</string>
+
+    <string name="fresh_cabbage">Fresh cabbage</string>
 </resources>

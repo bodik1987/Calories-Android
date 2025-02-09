@@ -102,8 +102,8 @@ fun ThemeSwitcher(
 @Composable
 fun ThemeMode.toDisplayName(): String {
     return when (this) {
-        ThemeMode.LIGHT -> stringResource(id = R.string.app_theme)
-        ThemeMode.DARK -> stringResource(id = R.string.app_theme)
-        ThemeMode.SYSTEM -> stringResource(id = R.string.app_theme)
+        ThemeMode.LIGHT -> stringResource(id = R.string.light_theme)
+        ThemeMode.DARK -> stringResource(id = R.string.dark_theme)
+        ThemeMode.SYSTEM -> stringResource(id = R.string.system_theme)
     }
 }
