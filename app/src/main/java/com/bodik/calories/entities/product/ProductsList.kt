@@ -12,6 +12,7 @@ import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -19,14 +20,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.bodik.calories.entities.PreferencesHelper
 import com.bodik.calories.entities.Product
 
 @Composable
-fun ProductsList(products: List<Product>, searchQuery: String) {
+fun ProductsList(
+    productsState: MutableState<List<Product>>,
+    searchQuery: String,
+    preferencesHelper: PreferencesHelper
+) {
     val openAddProductToDayProductsDialog = remember { mutableStateOf(false) }
     var selectedProduct by remember { mutableStateOf<Product?>(null) }
     LazyColumn {
-        items(products.filter { it.title.contains(searchQuery, ignoreCase = true) }
+        items(productsState.value.filter { it.title.contains(searchQuery, ignoreCase = true) }
             .sortedWith(compareByDescending<Product> { it.isFavorites }
                 .thenBy { it.title })) {
             ListItem(
@@ -54,6 +60,8 @@ fun ProductsList(products: List<Product>, searchQuery: String) {
     }
     AddProductToDayProducts(
         isOpen = openAddProductToDayProductsDialog,
-        selectedProduct = selectedProduct
+        selectedProduct = selectedProduct,
+        productsState = productsState,
+        preferencesHelper = preferencesHelper
     )
 }

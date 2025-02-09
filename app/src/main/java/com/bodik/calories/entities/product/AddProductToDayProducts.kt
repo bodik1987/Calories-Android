@@ -35,12 +35,17 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.graphics.Color
+import com.bodik.calories.entities.PreferencesHelper
 import com.bodik.calories.entities.Product
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddProductToDayProducts(isOpen: MutableState<Boolean>, selectedProduct: Product?) {
+fun AddProductToDayProducts(
+    isOpen: MutableState<Boolean>,
+    selectedProduct: Product?,
+    productsState: MutableState<List<Product>>,
+    preferencesHelper: PreferencesHelper
+) {
     val openEditProductDialog = remember { mutableStateOf(false) }
 
     if (isOpen.value && selectedProduct != null) {
@@ -130,5 +135,10 @@ fun AddProductToDayProducts(isOpen: MutableState<Boolean>, selectedProduct: Prod
             }
         }
     }
-    EditProduct(isOpen = openEditProductDialog)
+    EditProduct(
+        isOpen = openEditProductDialog,
+        productsState = productsState,
+        selectedProduct = selectedProduct,
+        preferencesHelper = preferencesHelper
+    )
 }

@@ -40,12 +40,19 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.focus.FocusRequester
+import com.bodik.calories.entities.PreferencesHelper
+import com.bodik.calories.entities.Product
+import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewProduct(isOpen: MutableState<Boolean>) {
+fun NewProduct(
+    isOpen: MutableState<Boolean>,
+    productsState: MutableState<List<Product>>,
+    preferencesHelper: PreferencesHelper
+) {
     if (isOpen.value) {
-
+        val products = productsState.value
         val focusRequester = remember { FocusRequester() }
         LaunchedEffect(Unit) { focusRequester.requestFocus() }
 
@@ -131,7 +138,23 @@ fun NewProduct(isOpen: MutableState<Boolean>) {
                         }
 
                         FilledTonalButton(
-                            onClick = { isOpen.value = false },
+                            onClick = {
+                                if (title.isNotEmpty() && calories.isNotEmpty()) {
+                                    val newProduct = Product(
+                                        id = UUID.randomUUID().toString(),
+                                        title = title,
+                                        calories = calories.toInt(),
+                                        isFavorites = checked
+                                    )
+                                    val updatedProducts = products + newProduct
+                                    preferencesHelper.saveProducts(updatedProducts)
+                                    productsState.value = updatedProducts
+                                    title = ""
+                                    calories = ""
+                                    checked = false
+                                }
+                                isOpen.value = false
+                            },
                         ) {
                             Text("Добавить")
                         }

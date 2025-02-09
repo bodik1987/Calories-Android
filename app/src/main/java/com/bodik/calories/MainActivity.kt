@@ -100,15 +100,15 @@ fun App(modifier: Modifier = Modifier) {
     var target by remember { mutableStateOf("") }
     val userData = preferencesHelper.loadUserData()
 
-    var products by remember { mutableStateOf(preferencesHelper.loadProducts()) }
+    var productsState = remember { mutableStateOf(preferencesHelper.loadProducts()) }
 
     LaunchedEffect(Unit) {
         selectedDay = preferencesHelper.loadSelectedDay()
 
-        if (products.isEmpty()) {
+        if (productsState.value.isEmpty()) {
             val initialProducts = getInitialProducts()
             preferencesHelper.saveProducts(initialProducts)
-            products = initialProducts
+            productsState.value = initialProducts
         }
     }
 
@@ -227,6 +227,6 @@ fun App(modifier: Modifier = Modifier) {
             onDismissRequest = { openBottomSheet.value = false },
             sheetState = bottomSheetState,
             modifier = Modifier.fillMaxHeight(0.92f)
-        ) { Products(products = products) }
+        ) { Products(productsState = productsState, preferencesHelper = preferencesHelper) }
     }
 }

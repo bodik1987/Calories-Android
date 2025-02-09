@@ -61,6 +61,10 @@ fun getInitialProducts(): List<Product> {
         Product(id = "55", title = "Котлета", calories = 108, isFavorites = false),
         Product(id = "56", title = "Кетчуп", calories = 97, isFavorites = false),
         Product(id = "57", title = "Блины", calories = 200, isFavorites = false),
-        Product(id = "58", title = "Кукуруза консервированная", calories = 77, isFavorites = false)
+        Product(id = "58", title = "Кукуруза консервированная", calories = 77, isFavorites = false),
+        Product(id = "59", title = "Мякоть кокоса", calories = 354, isFavorites = false),
+        Product(id = "60", title = "Миндальное молоко", calories = 56, isFavorites = false),
+        Product(id = "61", title = "Сало", calories = 816, isFavorites = false),
+        Product(id = "62", title = "Сахар", calories = 387, isFavorites = false),
     )
 }

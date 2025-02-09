@@ -38,11 +38,18 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
+import com.bodik.calories.entities.PreferencesHelper
+import com.bodik.calories.entities.Product
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditProduct(isOpen: MutableState<Boolean>) {
+fun EditProduct(
+    isOpen: MutableState<Boolean>,
+    productsState: MutableState<List<Product>>,
+    selectedProduct: Product?,
+    preferencesHelper: PreferencesHelper
+) {
     if (isOpen.value) {
 
         val focusRequester = remember { FocusRequester() }
@@ -138,10 +145,15 @@ fun EditProduct(isOpen: MutableState<Boolean>) {
 
                 }
             }
-            DeleteProduct(
-                isOpen = openDeleteSelectedDayProductDialog,
-                isParentOpen = isOpen
-            )
+            if (selectedProduct != null) {
+                DeleteProduct(
+                    isOpen = openDeleteSelectedDayProductDialog,
+                    isParentOpen = isOpen,
+                    productsState = productsState,
+                    id = selectedProduct.id,
+                    preferencesHelper = preferencesHelper
+                )
+            }
         }
     }
 }
