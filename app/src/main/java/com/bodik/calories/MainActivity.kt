@@ -67,6 +67,7 @@ import com.bodik.calories.uiComponents.CleanDay
 import com.bodik.calories.entities.product.Products
 import com.bodik.calories.entities.product.getInitialProducts
 import com.bodik.calories.ui.theme.CaloriesTheme
+import com.bodik.calories.uiComponents.SetStatusBarColorBasedOnTheme
 import com.bodik.calories.uiComponents.ThemeSwitcher
 import com.bodik.calories.uiComponents.UserMeasurements
 import java.util.Calendar
@@ -102,6 +103,7 @@ fun App(modifier: Modifier = Modifier, themeMode: ThemeMode, onThemeChange: (The
         ThemeMode.DARK -> true
         ThemeMode.SYSTEM -> isSystemInDarkTheme()
     }
+    SetStatusBarColorBasedOnTheme(themeMode == ThemeMode.DARK)
 
     MaterialTheme(colorScheme = if (isDarkTheme) darkColorScheme() else lightColorScheme()) {
         val context = LocalContext.current

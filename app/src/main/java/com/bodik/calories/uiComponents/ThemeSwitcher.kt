@@ -36,6 +36,8 @@ fun ThemeSwitcher(
 ) {
     if (isOpen.value) {
         val (selectedTheme, onThemeSelected) = remember { mutableStateOf(themeMode) }
+        val isDarkTheme = selectedTheme == ThemeMode.DARK
+        SetStatusBarColorBasedOnTheme(isDarkTheme)
 
         BasicAlertDialog(
             onDismissRequest = { isOpen.value = false }
