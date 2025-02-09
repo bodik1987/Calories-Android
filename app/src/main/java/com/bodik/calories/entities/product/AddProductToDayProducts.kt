@@ -35,6 +35,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.res.stringResource
+import com.bodik.calories.R
 import com.bodik.calories.entities.DayProduct
 import com.bodik.calories.entities.PreferencesHelper
 import com.bodik.calories.entities.Product
@@ -53,17 +55,13 @@ fun AddProductToDayProducts(
     val openEditProductDialog = remember { mutableStateOf(false) }
 
     if (isOpen.value && selectedProduct != null) {
-
         var weight by remember { mutableStateOf("") }
         var calories by remember { mutableStateOf("0") }
-
         val focusRequester = remember { FocusRequester() }
         LaunchedEffect(Unit) { focusRequester.requestFocus() }
 
         BasicAlertDialog(
-            onDismissRequest = {
-                isOpen.value = false
-            }
+            onDismissRequest = { isOpen.value = false }
         ) {
             Surface(
                 modifier = Modifier
@@ -92,7 +90,7 @@ fun AddProductToDayProducts(
                     }
 
                     Text(
-                        "Калории: $calories ккал",
+                        "${stringResource(id = R.string.calories)}: $calories ${stringResource(id = R.string.cal)}",
                         modifier = Modifier.padding(top = 8.dp)
                     )
                     Spacer(modifier = Modifier.height(16.dp))
@@ -100,9 +98,7 @@ fun AddProductToDayProducts(
                     OutlinedTextField(
                         value = weight,
                         onValueChange = { newValue ->
-                            // Only digit & .
                             val filteredValue = newValue.filter { it.isDigit() || it == '.' }
-                            // . not first & repeat
                             if (filteredValue.count { it == '.' } <= 1 && !filteredValue.startsWith(
                                     "."
                                 )) {
@@ -114,8 +110,8 @@ fun AddProductToDayProducts(
                             .fillMaxWidth()
                             .focusRequester(focusRequester),
                         shape = RoundedCornerShape(12.dp),
-                        label = { Text("Вес продукта") },
-                        suffix = { Text("г") },
+                        label = { Text(stringResource(id = R.string.product_weight)) },
+                        suffix = { Text(stringResource(id = R.string.weight_format)) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
 
@@ -132,7 +128,7 @@ fun AddProductToDayProducts(
                                 isOpen.value = false
                             },
                         ) {
-                            Text("Изменить")
+                            Text(stringResource(id = R.string.edit))
                         }
 
                         FilledTonalButton(
@@ -151,7 +147,7 @@ fun AddProductToDayProducts(
                                 isOpen.value = false
                             },
                         ) {
-                            Text("Добавить")
+                            Text(stringResource(id = R.string.add))
                         }
                     }
 

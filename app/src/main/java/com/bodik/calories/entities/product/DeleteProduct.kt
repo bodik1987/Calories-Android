@@ -8,6 +8,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.ui.res.stringResource
+import com.bodik.calories.R
 import com.bodik.calories.entities.PreferencesHelper
 import com.bodik.calories.entities.Product
 
@@ -22,29 +24,23 @@ fun DeleteProduct(
     if (isOpen.value) {
         val products = productsState.value
         AlertDialog(
-            onDismissRequest = {
-                isOpen.value = false
-            },
+            onDismissRequest = { isOpen.value = false },
             icon = { Icon(Icons.Filled.Warning, contentDescription = null) },
-            title = { Text(text = "Удалить продукт") },
-            text = {
-                Text(
-                    "Вы уверены, что хотите удалить продукт?"
-                )
-            },
+            title = { Text(text = stringResource(id = R.string.delete_product)) },
+            text = { Text(stringResource(id = R.string.delete_product_confirmation)) },
             confirmButton = {
                 TextButton(onClick = {
-                    val updatedProducts = products.filter { product: Product -> product.id != id }
+                    val updatedProducts = products
+                        .filter { product: Product -> product.id != id }
                     preferencesHelper.saveProducts(updatedProducts)
                     productsState.value = updatedProducts
                     isOpen.value = false
                     isParentOpen.value = false
-                }) { Text("Удалить") }
+                }) { Text(stringResource(id = R.string.delete)) }
             },
             dismissButton = {
-                TextButton(onClick = {
-                    isOpen.value = false
-                }) { Text("Отменить") }
+                TextButton(onClick = { isOpen.value = false })
+                { Text(stringResource(id = R.string.cancel)) }
             }
         )
     }

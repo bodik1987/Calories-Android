@@ -34,10 +34,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
+import com.bodik.calories.R
 import com.bodik.calories.entities.PreferencesHelper
 import com.bodik.calories.entities.Product
 import kotlin.math.roundToInt
@@ -58,7 +60,7 @@ fun EditProduct(
 
         LaunchedEffect(isOpen.value) {
             title = selectedProduct?.title ?: ""
-            calories = selectedProduct?.calories?.toString() ?: ""
+            calories = selectedProduct?.calories ?: ""
             checked = selectedProduct?.isFavorites ?: false
         }
 
@@ -68,9 +70,7 @@ fun EditProduct(
         val openDeleteSelectedDayProductDialog = remember { mutableStateOf(false) }
 
         BasicAlertDialog(
-            onDismissRequest = {
-                isOpen.value = false
-            }
+            onDismissRequest = { isOpen.value = false }
         ) {
             Surface(
                 modifier = Modifier
@@ -85,10 +85,10 @@ fun EditProduct(
                         .padding(top = 8.dp)
                 ) {
                     Text(
-                        "Изменить продукт", style = TextStyle(fontSize = 24.sp)
+                        stringResource(id = R.string.edit_product),
+                        style = TextStyle(fontSize = 24.sp)
                     )
                     Spacer(modifier = Modifier.height(16.dp))
-
                     OutlinedTextField(
                         value = title,
                         onValueChange = { title = it },
@@ -97,15 +97,13 @@ fun EditProduct(
                             .focusRequester(focusRequester),
                         singleLine = true,
                         shape = RoundedCornerShape(12.dp),
-                        label = { Text("Название продукта") },
+                        label = { Text(stringResource(id = R.string.product_name)) },
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
                         value = calories,
                         onValueChange = { newValue ->
-                            // Only digit & .
                             val filteredValue = newValue.filter { it.isDigit() || it == '.' }
-                            // . not first & repeat
                             if (filteredValue.count { it == '.' } <= 1 && !filteredValue.startsWith(
                                     "."
                                 )) {
@@ -115,8 +113,8 @@ fun EditProduct(
                         modifier = Modifier
                             .fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
-                        label = { Text("Калорийность") },
-                        suffix = { Text("г") },
+                        label = { Text(stringResource(id = R.string.calories)) },
+                        suffix = { Text(stringResource(id = R.string.weight_format)) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
 
@@ -132,7 +130,7 @@ fun EditProduct(
                             onCheckedChange = { checked = it },
                         )
                         Text(
-                            "В избранных",
+                            stringResource(id = R.string.in_favorites),
                             modifier = Modifier
                                 .padding(start = 16.dp),
                         )
@@ -149,9 +147,7 @@ fun EditProduct(
                             onClick = {
                                 openDeleteSelectedDayProductDialog.value = true
                             },
-                        ) {
-                            Text("Удалить")
-                        }
+                        ) { Text(stringResource(id = R.string.delete)) }
                         FilledTonalButton(
                             enabled = title.isNotEmpty() && calories.isNotEmpty(),
                             onClick = {
@@ -176,7 +172,7 @@ fun EditProduct(
                                 isOpen.value = false
                             },
                         ) {
-                            Text("Изменить")
+                            Text(stringResource(id = R.string.edit))
                         }
                     }
                 }

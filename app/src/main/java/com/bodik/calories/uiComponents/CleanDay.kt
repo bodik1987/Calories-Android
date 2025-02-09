@@ -8,6 +8,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.ui.res.stringResource
+import com.bodik.calories.R
 import com.bodik.calories.entities.DayProduct
 import com.bodik.calories.entities.PreferencesHelper
 
@@ -24,10 +26,10 @@ fun CleanDay(
                 isOpen.value = false
             },
             icon = { Icon(Icons.Filled.Warning, contentDescription = null) },
-            title = { Text(text = "Очистить день") },
+            title = { Text(text = stringResource(id = R.string.clear_day)) },
             text = {
                 Text(
-                    "Очисть все продукты за сегодняшний день?"
+                    stringResource(id = R.string.clear_products_confirmation)
                 )
             },
             confirmButton = {
@@ -35,12 +37,12 @@ fun CleanDay(
                     preferencesHelper.saveDayProducts(restDayProducts)
                     dayProductsState.value = preferencesHelper.loadDayProducts()
                     isOpen.value = false
-                }) { Text("Очистить") }
+                }) { Text(stringResource(id = R.string.clear)) }
             },
             dismissButton = {
                 TextButton(onClick = {
                     isOpen.value = false
-                }) { Text("Отменить") }
+                }) { Text(stringResource(id = R.string.cancel)) }
             }
         )
     }

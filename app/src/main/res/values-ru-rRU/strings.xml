@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Калории</string>
+    <string name="user_measurements">Пользовательские измерения</string>
+    <string name="app_theme">Тема приложения</string>
+    <string name="change_language">Сменить язык</string>
+    <string name="calories_remaining">Осталось</string>
+    <string name="calories_exceeded">Превышено на</string>
+    <string name="tomorrow">Завтра</string>
+    <string name="today">Сегодня</string>
+    <string name="clear">Очистить</string>
+    <string name="age">Возраст</string>
+    <string name="weight">Вес</string>
+    <string name="daily_goal">Ваша цель на день</string>
+    <string name="cancel">Отменить</string>
+    <string name="edit">Изменить</string>
+    <string name="light_theme">Светлая тема</string>
+    <string name="dark_theme">Тёмная тема</string>
+    <string name="system_theme">Как в системе</string>
+    <string name="cal">ккал</string>
+    <string name="clear_day">Очистить день</string>
+    <string name="clear_products_confirmation">Очистить список продуктов за этот день?</string>
+    <string name="search_by_name">Поиск по названию</string>
+    <string name="add_new_product">Добавить новый продукт</string>
+    <string name="product_name">Название продукта</string>
+    <string name="calories">Калорийность</string>
+    <string name="kcal_per_100g">ккал/100г</string>
+    <string name="in_favorites">В избранных</string>
+    <string name="add">Добавить</string>
+    <string name="product_weight">Вес продукта</string>
+    <string name="weight_format">г.</string>
+    <string name="delete">Удалить</string>
+    <string name="delete_product">Удалить продукт</string>
+    <string name="delete_product_confirmation">Вы уверены, что хотите удалить продукт?</string>
+    <string name="edit_product">Изменить продукт</string>
+    <string name="update">Обновить</string>
+</resources>

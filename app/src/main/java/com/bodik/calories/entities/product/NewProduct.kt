@@ -39,6 +39,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.res.stringResource
+import com.bodik.calories.R
 import com.bodik.calories.entities.PreferencesHelper
 import com.bodik.calories.entities.Product
 import java.util.UUID
@@ -56,9 +58,7 @@ fun NewProduct(
         val focusRequester = remember { FocusRequester() }
         LaunchedEffect(Unit) { focusRequester.requestFocus() }
 
-        BasicAlertDialog(
-            onDismissRequest = { isOpen.value = false }
-        ) {
+        BasicAlertDialog(onDismissRequest = { isOpen.value = false }) {
             Surface(
                 modifier = Modifier
                     .wrapContentWidth()
@@ -72,7 +72,8 @@ fun NewProduct(
                         .padding(top = 8.dp)
                 ) {
                     Text(
-                        "Добавить новый продукт", style = TextStyle(fontSize = 22.sp)
+                        stringResource(id = R.string.add_new_product),
+                        style = TextStyle(fontSize = 22.sp)
                     )
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -91,15 +92,13 @@ fun NewProduct(
                         keyboardOptions = KeyboardOptions(
                             capitalization = KeyboardCapitalization.Sentences
                         ),
-                        label = { Text("Название продукта") },
+                        label = { Text(stringResource(id = R.string.product_name)) },
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
                         value = calories,
                         onValueChange = { newValue ->
-                            // Only digit & .
                             val filteredValue = newValue.filter { it.isDigit() || it == '.' }
-                            // . not first & repeat
                             if (filteredValue.count { it == '.' } <= 1 && !filteredValue.startsWith(
                                     "."
                                 )) {
@@ -110,8 +109,8 @@ fun NewProduct(
                         modifier = Modifier
                             .fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
-                        label = { Text("Калорийность") },
-                        suffix = { Text("ккал/100г") },
+                        label = { Text(stringResource(id = R.string.calories)) },
+                        suffix = { Text(stringResource(id = R.string.kcal_per_100g)) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
 
@@ -127,9 +126,8 @@ fun NewProduct(
                             onCheckedChange = { checked = it },
                         )
                         Text(
-                            "В избранных",
-                            modifier = Modifier
-                                .padding(start = 16.dp),
+                            stringResource(id = R.string.in_favorites),
+                            modifier = Modifier.padding(start = 16.dp)
                         )
                     }
 
@@ -141,12 +139,8 @@ fun NewProduct(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         TextButton(
-                            onClick = {
-                                isOpen.value = false
-                            },
-                        ) {
-                            Text("Отменить")
-                        }
+                            onClick = { isOpen.value = false },
+                        ) { Text(stringResource(id = R.string.cancel)) }
 
                         FilledTonalButton(
                             enabled = title.isNotEmpty() && calories.isNotEmpty(),
@@ -165,9 +159,7 @@ fun NewProduct(
                                 checked = false
                                 isOpen.value = false
                             },
-                        ) {
-                            Text("Добавить")
-                        }
+                        ) { Text(stringResource(id = R.string.add)) }
                     }
                 }
             }

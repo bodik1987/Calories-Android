@@ -1,3 +1,40 @@
 <resources>
     <string name="app_name">Calories</string>
+    <string name="user_measurements">User measurements</string>
+    <string name="app_theme">App theme</string>
+    <string name="en" translatable="false">English</string>
+    <string name="ru" translatable="false">Русский</string>
+    <string name="uk" translatable="false">Українська</string>
+    <string name="pl" translatable="false">Polski</string>
+    <string name="change_language">Change language</string>
+    <string name="calories_remaining">Remaining</string>
+    <string name="calories_exceeded">Exceeded by</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="today">Today</string>
+    <string name="clear">Clear</string>
+    <string name="age">Age</string>
+    <string name="weight">Weight</string>
+    <string name="daily_goal">Your daily goal is</string>
+    <string name="cancel">Cancel</string>
+    <string name="edit">Edit</string>
+    <string name="light_theme">Light theme</string>
+    <string name="dark_theme">Dark theme</string>
+    <string name="system_theme">Follow system</string>
+    <string name="cal">kcal</string>
+    <string name="clear_day">Clear day</string>
+    <string name="clear_products_confirmation">Clear the list of products for this day?</string>
+    <string name="search_by_name">Search by name</string>
+    <string name="add_new_product">Add new product</string>
+    <string name="product_name">Product name</string>
+    <string name="calories">Calories</string>
+    <string name="kcal_per_100g">kcal/100g</string>
+    <string name="in_favorites">In favorites</string>
+    <string name="add">Add</string>
+    <string name="product_weight">Product weight</string>
+    <string name="weight_format">g.</string>
+    <string name="delete">Delete</string>
+    <string name="delete_product">Delete product</string>
+    <string name="delete_product_confirmation">Are you sure you want to delete the product?</string>
+    <string name="edit_product">Edit product</string>
+    <string name="update">Update</string>
 </resources>

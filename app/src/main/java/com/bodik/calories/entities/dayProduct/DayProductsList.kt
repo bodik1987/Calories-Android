@@ -17,7 +17,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.bodik.calories.R
 import com.bodik.calories.entities.DayProduct
 import com.bodik.calories.entities.PreferencesHelper
 import com.bodik.calories.entities.calculateDayProductCalories
@@ -46,7 +48,7 @@ fun DayProductsList(
                             .fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("${it.product.title}, ${it.weight} г.")
+                        Text("${it.product.title}, ${it.weight} ${stringResource(id = R.string.weight_format)}")
                         Text(
                             calculateDayProductCalories(it),
                             modifier = Modifier

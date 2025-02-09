@@ -23,7 +23,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.bodik.calories.R
 import com.bodik.calories.entities.DayProduct
 import com.bodik.calories.entities.PreferencesHelper
 import com.bodik.calories.entities.Product
@@ -52,7 +54,7 @@ fun Products(
                 .weight(1f)
                 .padding(end = 16.dp),
             shape = RoundedCornerShape(16.dp),
-            label = { Text("Поиск по названию") },
+            label = { Text(stringResource(id = R.string.search_by_name)) },
             leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
             trailingIcon = {
                 if (searchQuery.length > 1) {

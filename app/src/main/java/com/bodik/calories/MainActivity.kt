@@ -12,20 +12,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import android.content.Context
 import android.view.accessibility.AccessibilityManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Build
-import androidx.compose.material.icons.outlined.Email
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.Button
@@ -40,7 +36,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Switch
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -55,7 +50,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.bodik.calories.entities.PreferencesHelper
@@ -67,13 +62,14 @@ import com.bodik.calories.uiComponents.CleanDay
 import com.bodik.calories.entities.product.Products
 import com.bodik.calories.entities.product.getInitialProducts
 import com.bodik.calories.ui.theme.CaloriesTheme
+import com.bodik.calories.uiComponents.LanguageSwitcher
 import com.bodik.calories.uiComponents.SetStatusBarColorBasedOnTheme
 import com.bodik.calories.uiComponents.ThemeSwitcher
 import com.bodik.calories.uiComponents.UserMeasurements
 import java.util.Calendar
 import kotlin.math.roundToInt
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val preferencesHelper = PreferencesHelper(this)
@@ -98,6 +94,13 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun App(modifier: Modifier = Modifier, themeMode: ThemeMode, onThemeChange: (ThemeMode) -> Unit) {
+    val localeOptions = mapOf(
+        R.string.en to "en",
+        R.string.ru to "ru-rRu",
+        R.string.uk to "uk",
+        R.string.pl to "pl",
+    ).mapKeys { stringResource(it.key) }
+
     val isDarkTheme = when (themeMode) {
         ThemeMode.LIGHT -> false
         ThemeMode.DARK -> true
@@ -117,6 +120,7 @@ fun App(modifier: Modifier = Modifier, themeMode: ThemeMode, onThemeChange: (The
         val openCleanDayDialog = remember { mutableStateOf(false) }
         val openUserMeasurements = remember { mutableStateOf(false) }
         val openThemeSettings = remember { mutableStateOf(false) }
+        val openLanguageSwitcher = remember { mutableStateOf(false) }
 
         val openBottomSheet = remember { mutableStateOf(false) }
         val bottomSheetState =
@@ -131,6 +135,7 @@ fun App(modifier: Modifier = Modifier, themeMode: ThemeMode, onThemeChange: (The
         var target by remember { mutableStateOf("") }
         val userData = preferencesHelper.loadUserData()
 
+        val savedLanguage = remember { mutableStateOf(preferencesHelper.getLanguage()) }
         val productsState = remember { mutableStateOf(preferencesHelper.loadProducts()) }
         val dayProductsState = remember { mutableStateOf(preferencesHelper.loadDayProducts()) }
         val restDayProducts = dayProductsState.value.filter { it.day != selectedDay }
@@ -156,7 +161,13 @@ fun App(modifier: Modifier = Modifier, themeMode: ThemeMode, onThemeChange: (The
                 .nestedScroll(scrollBehaviorTopBar.nestedScrollConnection),
             topBar = {
                 TopAppBar(
-                    title = { Text("Калории", maxLines = 1, overflow = TextOverflow.Ellipsis) },
+                    title = {
+                        Text(
+                            stringResource(id = R.string.app_name),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    },
                     navigationIcon = {
                         var expanded by remember { mutableStateOf(false) }
 
@@ -168,7 +179,7 @@ fun App(modifier: Modifier = Modifier, themeMode: ThemeMode, onThemeChange: (The
                         }
                         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                             DropdownMenuItem(
-                                text = { Text("Данные пользователя") },
+                                text = { Text(stringResource(id = R.string.user_measurements)) },
                                 onClick = {
                                     openUserMeasurements.value = true
                                     expanded = false
@@ -184,7 +195,7 @@ fun App(modifier: Modifier = Modifier, themeMode: ThemeMode, onThemeChange: (The
 //                        HorizontalDivider()
 
                             DropdownMenuItem(
-                                text = { Text("Тема приложения") },
+                                text = { Text(stringResource(id = R.string.app_theme)) },
                                 onClick = {
                                     openThemeSettings.value = true
                                     expanded = false
@@ -192,6 +203,20 @@ fun App(modifier: Modifier = Modifier, themeMode: ThemeMode, onThemeChange: (The
                                 leadingIcon = {
                                     Icon(
                                         Icons.Outlined.Build,
+                                        contentDescription = null
+                                    )
+                                },
+                            )
+
+                            DropdownMenuItem(
+                                text = { Text(stringResource(id = R.string.change_language)) },
+                                onClick = {
+                                    openLanguageSwitcher.value = true
+                                    expanded = false
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        Icons.Outlined.Edit,
                                         contentDescription = null
                                     )
                                 },
@@ -208,7 +233,11 @@ fun App(modifier: Modifier = Modifier, themeMode: ThemeMode, onThemeChange: (The
                         val remainingCalories = targetCalories - totalCaloriesValue
                         val isTargetExceeded = remainingCalories >= 0
                         Text(
-                            "${if (isTargetExceeded) "Осталось" else "Превышено на"} ${if (isTargetExceeded) remainingCalories.roundToInt() else -1 * remainingCalories.roundToInt()}",
+                            "${
+                                if (isTargetExceeded) stringResource(id = R.string.calories_remaining) else stringResource(
+                                    id = R.string.calories_exceeded
+                                )
+                            } ${if (isTargetExceeded) remainingCalories.roundToInt() else -1 * remainingCalories.roundToInt()}",
                             modifier = Modifier.padding(end = 12.dp)
                         )
                     },
@@ -221,7 +250,10 @@ fun App(modifier: Modifier = Modifier, themeMode: ThemeMode, onThemeChange: (The
                         listOf(1, 2).forEach { day ->
                             val isSelected = selectedDay == day
                             val isToday = (day == 1) == isTodayOdd
-                            val buttonText = if (isToday) "Завтра" else "Сегодня"
+                            val buttonText =
+                                if (isToday) stringResource(id = R.string.tomorrow) else stringResource(
+                                    id = R.string.today
+                                )
 
                             if (isSelected) {
                                 Button(
@@ -242,7 +274,7 @@ fun App(modifier: Modifier = Modifier, themeMode: ThemeMode, onThemeChange: (The
                         if (todayDayProducts.isNotEmpty()) TextButton(onClick = {
                             openCleanDayDialog.value = true
                         }) {
-                            Text("Очистить")
+                            Text(stringResource(id = R.string.clear))
 
                             CleanDay(
                                 isOpen = openCleanDayDialog,
@@ -283,6 +315,12 @@ fun App(modifier: Modifier = Modifier, themeMode: ThemeMode, onThemeChange: (The
             isOpen = openThemeSettings,
             themeMode = themeMode,
             onThemeChange = onThemeChange
+        )
+        LanguageSwitcher(
+            isOpen = openLanguageSwitcher,
+            localeOptions = localeOptions,
+            preferencesHelper = preferencesHelper,
+            savedLanguage = savedLanguage
         )
 
         if (openBottomSheet.value) {

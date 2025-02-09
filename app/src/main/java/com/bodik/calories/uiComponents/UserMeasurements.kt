@@ -32,8 +32,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
+import com.bodik.calories.R
 import com.bodik.calories.entities.PreferencesHelper
 import com.bodik.calories.entities.calculateTarget
 import kotlin.math.roundToInt
@@ -72,7 +74,8 @@ fun UserMeasurements(isOpen: MutableState<Boolean>, preferencesHelper: Preferenc
                         .padding(top = 8.dp)
                 ) {
                     Text(
-                        "Данные пользователя", style = TextStyle(fontSize = 24.sp)
+                        stringResource(id = R.string.user_measurements),
+                        style = TextStyle(fontSize = 24.sp)
                     )
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -96,16 +99,14 @@ fun UserMeasurements(isOpen: MutableState<Boolean>, preferencesHelper: Preferenc
                             },
                             modifier = Modifier.weight(1f),
                             shape = RoundedCornerShape(12.dp),
-                            label = { Text("Возраст") },
+                            label = { Text(stringResource(id = R.string.age)) },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         OutlinedTextField(
                             value = userWeight,
                             onValueChange = { newValue ->
-                                // Only digit & .
                                 val filteredValue = newValue.filter { it.isDigit() || it == '.' }
-                                // . not first & repeat
                                 if (filteredValue.count { it == '.' } <= 1 && !filteredValue.startsWith(
                                         "."
                                     )) {
@@ -115,13 +116,14 @@ fun UserMeasurements(isOpen: MutableState<Boolean>, preferencesHelper: Preferenc
                             },
                             modifier = Modifier.weight(1f),
                             shape = RoundedCornerShape(12.dp),
-                            label = { Text("Вес") },
+                            label = { Text(stringResource(id = R.string.weight)) },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                         )
                     }
 
                     Text(
-                        "Ваша цель на день $target калорий", modifier = Modifier
+                        "${stringResource(id = R.string.daily_goal)} $target ${stringResource(id = R.string.cal)}",
+                        modifier = Modifier
                             .padding(top = 16.dp)
                     )
 
@@ -135,7 +137,7 @@ fun UserMeasurements(isOpen: MutableState<Boolean>, preferencesHelper: Preferenc
                         TextButton(
                             onClick = { isOpen.value = false },
                         ) {
-                            Text("Отменить")
+                            Text(stringResource(id = R.string.cancel))
                         }
 
                         FilledTonalButton(
@@ -157,7 +159,7 @@ fun UserMeasurements(isOpen: MutableState<Boolean>, preferencesHelper: Preferenc
                                 isOpen.value = false
                             },
                         ) {
-                            Text("Изменить")
+                            Text(stringResource(id = R.string.edit))
                         }
                     }
                 }

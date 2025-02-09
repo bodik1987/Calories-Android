@@ -30,9 +30,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.sp
+import com.bodik.calories.R
 import com.bodik.calories.entities.DayProduct
 import com.bodik.calories.entities.PreferencesHelper
 
@@ -54,9 +56,7 @@ fun EditDayProduct(
         }
 
         BasicAlertDialog(
-            onDismissRequest = {
-                isOpen.value = false
-            }
+            onDismissRequest = { isOpen.value = false }
         ) {
             Surface(
                 modifier = Modifier
@@ -71,7 +71,8 @@ fun EditDayProduct(
                         .padding(top = 8.dp)
                 ) {
                     Text(
-                        "Изменить продукт", style = TextStyle(fontSize = 24.sp)
+                        stringResource(id = R.string.edit_product),
+                        style = TextStyle(fontSize = 24.sp)
                     )
 
                     fun calculateCalories(weight: String): String {
@@ -85,11 +86,14 @@ fun EditDayProduct(
                     }
 
                     Text(
-                        "Калории: ${calculateCalories(weight)} ккал",
+                        "${stringResource(id = R.string.calories)}: ${calculateCalories(weight)} ${
+                            stringResource(
+                                id = R.string.cal
+                            )
+                        }",
                         modifier = Modifier.padding(top = 8.dp)
                     )
                     Spacer(modifier = Modifier.height(16.dp))
-
 
                     OutlinedTextField(
                         value = weight,
@@ -97,8 +101,7 @@ fun EditDayProduct(
                         modifier = Modifier
                             .fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
-                        label = { Text("Вес продукта") },
-//                        suffix = { Text("г") },
+                        label = { Text(stringResource(id = R.string.product_weight)) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
 
@@ -110,11 +113,9 @@ fun EditDayProduct(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         TextButton(
-                            onClick = {
-                                openDeleteDayProductDialog.value = true
-                            },
+                            onClick = { openDeleteDayProductDialog.value = true },
                         ) {
-                            Text("Удалить")
+                            Text(stringResource(id = R.string.delete))
                         }
                         FilledTonalButton(
                             enabled = weight.isNotEmpty(),
@@ -135,7 +136,7 @@ fun EditDayProduct(
                                 isOpen.value = false
                             },
                         ) {
-                            Text("Обновить")
+                            Text(stringResource(id = R.string.update))
                         }
                     }
                 }

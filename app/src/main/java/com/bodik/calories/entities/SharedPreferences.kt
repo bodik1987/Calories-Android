@@ -8,6 +8,15 @@ class PreferencesHelper(context: Context) {
     private val sharedPreferences: SharedPreferences =
         context.getSharedPreferences("user_data", Context.MODE_PRIVATE)
 
+    //    Language
+    fun getLanguage(): String {
+        return sharedPreferences.getString("app_language", "en") ?: "en"
+    }
+
+    fun setLanguage(languageCode: String) {
+        sharedPreferences.edit().putString("app_language", languageCode).apply()
+    }
+
     //    Dark theme
     fun getThemeMode(): ThemeMode {
         val mode = sharedPreferences.getString("theme_mode", ThemeMode.SYSTEM.name)

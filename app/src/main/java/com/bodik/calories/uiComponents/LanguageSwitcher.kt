@@ -1,5 +1,6 @@
 package com.bodik.calories.uiComponents
 
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -19,8 +20,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -28,20 +27,19 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.os.LocaleListCompat
 import com.bodik.calories.R
-import com.bodik.calories.entities.ThemeMode
+import com.bodik.calories.entities.PreferencesHelper
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ThemeSwitcher(
+fun LanguageSwitcher(
     isOpen: MutableState<Boolean>,
-    themeMode: ThemeMode,
-    onThemeChange: (ThemeMode) -> Unit
+    localeOptions: Map<String, String>,
+    preferencesHelper: PreferencesHelper,
+    savedLanguage: MutableState<String>
 ) {
     if (isOpen.value) {
-        val (selectedTheme, onThemeSelected) = remember { mutableStateOf(themeMode) }
-        val isDarkTheme = selectedTheme == ThemeMode.DARK
-        SetStatusBarColorBasedOnTheme(isDarkTheme)
 
         BasicAlertDialog(
             onDismissRequest = { isOpen.value = false }
@@ -59,22 +57,25 @@ fun ThemeSwitcher(
                         .padding(top = 8.dp)
                 ) {
                     Text(
-                        text = stringResource(id = R.string.app_theme),
+                        text = stringResource(id = R.string.change_language),
                         style = TextStyle(fontSize = 24.sp)
                     )
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Column(Modifier.selectableGroup()) {
-                        ThemeMode.entries.forEach { theme ->
+                        localeOptions.entries.forEach { locale ->
                             Row(
                                 Modifier
                                     .fillMaxWidth()
                                     .height(56.dp)
                                     .selectable(
-                                        selected = (theme == selectedTheme),
+                                        selected = (locale.value == savedLanguage.value),
                                         onClick = {
-                                            onThemeSelected(theme)
-                                            onThemeChange(theme)
+                                            savedLanguage.value = locale.value
+                                            preferencesHelper.setLanguage(locale.value)
+                                            AppCompatDelegate.setApplicationLocales(
+                                                LocaleListCompat.forLanguageTags(locale.value)
+                                            )
                                         },
                                         role = Role.RadioButton
                                     )
@@ -82,11 +83,11 @@ fun ThemeSwitcher(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 RadioButton(
-                                    selected = (theme == selectedTheme),
+                                    selected = (locale.value == savedLanguage.value),
                                     onClick = null
                                 )
                                 Text(
-                                    text = theme.toDisplayName(),
+                                    text = locale.key,
                                     style = MaterialTheme.typography.bodyLarge,
                                     modifier = Modifier.padding(start = 16.dp)
                                 )
@@ -96,14 +97,5 @@ fun ThemeSwitcher(
                 }
             }
         }
-    }
-}
-
-@Composable
-fun ThemeMode.toDisplayName(): String {
-    return when (this) {
-        ThemeMode.LIGHT -> stringResource(id = R.string.app_theme)
-        ThemeMode.DARK -> stringResource(id = R.string.app_theme)
-        ThemeMode.SYSTEM -> stringResource(id = R.string.app_theme)
     }
 }

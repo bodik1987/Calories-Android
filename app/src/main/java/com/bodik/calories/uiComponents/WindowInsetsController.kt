@@ -20,7 +20,6 @@ fun SetStatusBarColorBasedOnTheme(isDarkTheme: Boolean) {
                 insetsController.isAppearanceLightStatusBars = !isDarkTheme
             } else {
 
-                // Светлый цвет для статус-бара
                 android.graphics.Color.WHITE
             }
         }

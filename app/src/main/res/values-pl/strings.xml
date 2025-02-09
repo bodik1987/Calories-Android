@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Kalorie</string>
+    <string name="user_measurements">Pomiary użytkownika</string>
+    <string name="app_theme">Motyw aplikacji</string>
+    <string name="change_language">Zmień język</string>
+    <string name="calories_remaining">Pozostało</string>
+    <string name="calories_exceeded">Przekroczono o</string>
+    <string name="tomorrow">Jutro</string>
+    <string name="today">Dziś</string>
+    <string name="clear">Wyczyść</string>
+    <string name="age">Wiek</string>
+    <string name="weight">Waga</string>
+    <string name="daily_goal">Twój dzienny cel to</string>
+    <string name="cancel">Anuluj</string>
+    <string name="edit">Edytuj</string>
+    <string name="light_theme">Jasny motyw</string>
+    <string name="dark_theme">Ciemny motyw</string>
+    <string name="system_theme">Jak w systemie</string>
+    <string name="cal">kcal</string>
+    <string name="clear_day">Wyczyść dzień</string>
+    <string name="clear_products_confirmation">Wyczyścić listę produktów na ten dzień?</string>
+    <string name="search_by_name">Szukaj według nazwy</string>
+    <string name="add_new_product">Dodaj nowy produkt</string>
+    <string name="product_name">Nazwa produktu</string>
+    <string name="calories">Kaloryczność</string>
+    <string name="kcal_per_100g">kcal/100g</string>
+    <string name="in_favorites">W ulubionych</string>
+    <string name="add">Dodaj</string>
+    <string name="product_weight">Waga produktu</string>
+    <string name="weight_format">g.</string>
+    <string name="delete">Usuń</string>
+    <string name="delete_product">Usuń produkt</string>
+    <string name="delete_product_confirmation">Czy na pewno chcesz usunąć produkt?</string>
+    <string name="edit_product">Edytuj produkt</string>
+    <string name="update">Aktualizuj</string>
+</resources>

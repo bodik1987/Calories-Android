@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Калорії</string>
+    <string name="user_measurements">Виміри користувача</string>
+    <string name="app_theme">Тема додатку</string>
+    <string name="change_language">Змінити мову</string>
+    <string name="calories_remaining">Залишилося</string>
+    <string name="calories_exceeded">Перевищено на</string>
+    <string name="tomorrow">Завтра</string>
+    <string name="today">Сьогодні</string>
+    <string name="clear">Очистити</string>
+    <string name="age">Вік</string>
+    <string name="weight">Вага</string>
+    <string name="daily_goal">Ваша ціль на день</string>
+    <string name="cancel">Скасувати</string>
+    <string name="edit">Змінити</string>
+    <string name="light_theme">Світла тема</string>
+    <string name="dark_theme">Темна тема</string>
+    <string name="system_theme">Як у системі</string>
+    <string name="cal">ккал</string>
+    <string name="clear_day">Очистити день</string>
+    <string name="clear_products_confirmation">Очистити список продуктів за цей день?</string>
+    <string name="search_by_name">Пошук за назвою</string>
+    <string name="add_new_product">Додати новий продукт</string>
+    <string name="product_name">Назва продукту</string>
+    <string name="calories">Калорійність</string>
+    <string name="kcal_per_100g">ккал/100г</string>
+    <string name="in_favorites">В обраних</string>
+    <string name="add">Додати</string>
+    <string name="product_weight">Вага продукту</string>
+    <string name="weight_format">г.</string>
+    <string name="delete">Видалити</string>
+    <string name="delete_product">Видалити продукт</string>
+    <string name="delete_product_confirmation">Ви впевнені, що хочете видалити продукт?</string>
+    <string name="edit_product">Змінити продукт</string>
+    <string name="update">Оновити</string>
+</resources>
