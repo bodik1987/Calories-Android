@@ -139,7 +139,7 @@ fun EditProduct(
                         FilledTonalButton(
                             onClick = { isOpen.value = false },
                         ) {
-                            Text("Обновить")
+                            Text("Изменить")
                         }
                     }
 
