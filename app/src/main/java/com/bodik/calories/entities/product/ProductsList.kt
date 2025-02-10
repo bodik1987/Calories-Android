@@ -33,7 +33,8 @@ fun ProductsList(
     searchQuery: String,
     preferencesHelper: PreferencesHelper,
     selectedDay: Int,
-    dayProductsState: MutableState<List<DayProduct>>
+    dayProductsState: MutableState<List<DayProduct>>,
+    showFavorites: Boolean
 ) {
     val openAddProductToDayProductsDialog = remember { mutableStateOf(false) }
     var selectedProduct by remember { mutableStateOf<Product?>(null) }
@@ -47,9 +48,10 @@ fun ProductsList(
     LazyColumn {
         groupedProducts.forEach { (initial, products) ->
             stickyHeader {
-                Text(
+                if (!showFavorites) Text(
                     text = initial.toString(),
                     style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(MaterialTheme.colorScheme.surfaceContainerLow)

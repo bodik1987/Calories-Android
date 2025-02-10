@@ -1,5 +1,6 @@
 package com.bodik.calories.entities.product
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -8,11 +9,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,6 +34,7 @@ import com.bodik.calories.entities.DayProduct
 import com.bodik.calories.entities.PreferencesHelper
 import com.bodik.calories.entities.Product
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
 fun Products(
     productsState: MutableState<List<Product>>,
@@ -39,12 +44,17 @@ fun Products(
 ) {
     val openNewProduct = remember { mutableStateOf(false) }
     var searchQuery by remember { mutableStateOf("") }
+    var showFavorites by remember { mutableStateOf(false) }
+    val filteredProducts = if (showFavorites) {
+        productsState.value.filter { it.isFavorites }
+    } else {
+        productsState.value
+    }
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-            .padding(bottom = 16.dp),
+            .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         OutlinedTextField(
@@ -52,9 +62,9 @@ fun Products(
             onValueChange = { searchQuery = it },
             modifier = Modifier
                 .weight(1f)
-                .padding(end = 16.dp),
+                .padding(end = 8.dp),
             shape = RoundedCornerShape(16.dp),
-            label = { Text(stringResource(id = R.string.search_by_name)) },
+            label = { Text(stringResource(id = R.string.search)) },
             leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
             trailingIcon = {
                 if (searchQuery.length > 1) {
@@ -65,9 +75,22 @@ fun Products(
             }
         )
         FloatingActionButton(
+            modifier = Modifier
+                .offset(y = 4.dp)
+                .padding(end = 8.dp),
+            onClick = { showFavorites = !showFavorites },
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            elevation = FloatingActionButtonDefaults.loweredElevation(),
+        ) {
+            Icon(
+                if (showFavorites) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                contentDescription = "Toggle favorites"
+            )
+        }
+        FloatingActionButton(
             modifier = Modifier.offset(y = 4.dp),
             onClick = { openNewProduct.value = true },
-            containerColor = FloatingActionButtonDefaults.containerColor,
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
             elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
 //            shape = CircleShape
         ) {
@@ -80,10 +103,11 @@ fun Products(
         preferencesHelper = preferencesHelper
     )
     ProductsList(
-        productsState = productsState,
+        productsState = mutableStateOf(filteredProducts),
         searchQuery = searchQuery,
         preferencesHelper = preferencesHelper,
         selectedDay = selectedDay,
-        dayProductsState = dayProductsState
+        dayProductsState = dayProductsState,
+        showFavorites = showFavorites
     )
 }

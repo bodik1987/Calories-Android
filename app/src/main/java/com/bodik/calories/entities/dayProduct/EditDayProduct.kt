@@ -48,12 +48,9 @@ fun EditDayProduct(
 ) {
     if (isOpen.value) {
         val openDeleteDayProductDialog = remember { mutableStateOf(false) }
-
         var weight by remember { mutableStateOf("") }
 
-        LaunchedEffect(isOpen.value) {
-            weight = selectedDayProduct?.weight ?: ""
-        }
+        LaunchedEffect(isOpen.value) { weight = selectedDayProduct?.weight ?: "" }
 
         BasicAlertDialog(
             onDismissRequest = { isOpen.value = false }

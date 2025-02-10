@@ -20,7 +20,7 @@
     <string name="cal">ккал</string>
     <string name="clear_day">Очистить день</string>
     <string name="clear_products_confirmation">Очистить список продуктов за этот день?</string>
-    <string name="search_by_name">Поиск по названию</string>
+    <string name="search">Поиск</string>
     <string name="add_new_product">Добавить новый продукт</string>
     <string name="product_name">Название продукта</string>
     <string name="calories">Калорийность</string>
@@ -35,6 +35,7 @@
     <string name="edit_product">Изменить продукт</string>
     <string name="update">Обновить</string>
     <string name="empty_list">Список пуст</string>
+    <string name="backup">Резаервная копия</string>
 
     <string name="fresh_cabbage">Капуста свежая</string>
 </resources>

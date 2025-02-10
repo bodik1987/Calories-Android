@@ -12,7 +12,6 @@ import androidx.compose.ui.res.stringResource
 import com.bodik.calories.R
 import com.bodik.calories.entities.DayProduct
 import com.bodik.calories.entities.PreferencesHelper
-import com.bodik.calories.entities.Product
 
 @Composable
 fun DeleteDayProduct(

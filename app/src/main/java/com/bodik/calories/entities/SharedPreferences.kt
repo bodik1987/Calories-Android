@@ -2,13 +2,15 @@ package com.bodik.calories.entities
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.net.Uri
 import kotlin.math.roundToInt
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class PreferencesHelper(context: Context) {
     private val sharedPreferences: SharedPreferences =
         context.getSharedPreferences("user_data", Context.MODE_PRIVATE)
 
-    //    Language
     fun getLanguage(): String {
         return sharedPreferences.getString("app_language", "en") ?: "en"
     }
@@ -17,18 +19,6 @@ class PreferencesHelper(context: Context) {
         sharedPreferences.edit().putString("app_language", languageCode).apply()
     }
 
-    //    Dark theme
-    fun getThemeMode(): ThemeMode {
-        val mode = sharedPreferences.getString("theme_mode", ThemeMode.SYSTEM.name)
-            ?: ThemeMode.SYSTEM.name
-        return ThemeMode.valueOf(mode)
-    }
-
-    fun setThemeMode(mode: ThemeMode) {
-        sharedPreferences.edit().putString("theme_mode", mode.name).apply()
-    }
-
-    //    Selected day
     fun updateSelectedDay(day: Int) {
         with(sharedPreferences.edit()) {
             putString("selectedDay", day.toString())
@@ -96,6 +86,10 @@ class PreferencesHelper(context: Context) {
         return products
     }
 
+    fun clearAllProducts(context: Context) {
+        sharedPreferences.edit().clear().apply()
+    }
+
     // DayProduct
     fun loadDayProducts(): List<DayProduct> {
         val dayProductsCount = sharedPreferences.getInt("dayProducts", 0)
@@ -144,6 +138,35 @@ class PreferencesHelper(context: Context) {
         }
         editor.apply()
     }
+
+    fun restoreBackupFromUri(context: Context, uri: Uri) {
+        try {
+            val inputStream = context.contentResolver.openInputStream(uri)
+            val json = inputStream?.bufferedReader()?.use { it.readText() }
+
+            println("Loaded JSON: $json")
+
+            val type = object : TypeToken<List<Product>>() {}.type
+            val products: List<Product> = Gson().fromJson(json, type) ?: emptyList()
+
+            println("Parsed Products: $products")
+
+            saveProducts(products)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 }
+
+fun saveBackupToUri(context: Context, uri: Uri, products: List<Product>) {
+    try {
+        val json = Gson().toJson(products)
+        context.contentResolver.openOutputStream(uri)?.use { it.write(json.toByteArray()) }
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+}
+
+
 
 

@@ -23,7 +23,7 @@
     <string name="cal">kcal</string>
     <string name="clear_day">Clear day</string>
     <string name="clear_products_confirmation">Clear the list of products for this day?</string>
-    <string name="search_by_name">Search by name</string>
+    <string name="search">Search</string>
     <string name="add_new_product">Add new product</string>
     <string name="product_name">Product name</string>
     <string name="calories">Calories</string>
@@ -38,6 +38,7 @@
     <string name="edit_product">Edit product</string>
     <string name="update">Update</string>
     <string name="empty_list">The list is empty</string>
+    <string name="backup">Backup</string>
 
     <string name="fresh_cabbage">Fresh cabbage</string>
 </resources>

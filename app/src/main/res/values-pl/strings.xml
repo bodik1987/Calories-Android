@@ -20,7 +20,7 @@
     <string name="cal">kcal</string>
     <string name="clear_day">Wyczyść dzień</string>
     <string name="clear_products_confirmation">Wyczyścić listę produktów na ten dzień?</string>
-    <string name="search_by_name">Szukaj według nazwy</string>
+    <string name="search">Szukaj</string>
     <string name="add_new_product">Dodaj nowy produkt</string>
     <string name="product_name">Nazwa produktu</string>
     <string name="calories">Kaloryczność</string>
@@ -35,6 +35,7 @@
     <string name="edit_product">Edytuj produkt</string>
     <string name="update">Aktualizuj</string>
     <string name="empty_list">Lista jest pusta</string>
+    <string name="backup">Kopia zapasowa</string>
     
     <string name="fresh_cabbage">Świeża kapusta</string>
 </resources>

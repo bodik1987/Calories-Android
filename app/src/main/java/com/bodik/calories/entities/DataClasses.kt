@@ -22,8 +22,6 @@ data class DayProduct(
     val weight: String
 )
 
-enum class ThemeMode { LIGHT, DARK, SYSTEM }
-
 fun calculateTarget(weight: String, age: String): String {
     val weightFloat = weight.toFloatOrNull()
     val ageFloat = age.toFloatOrNull()
