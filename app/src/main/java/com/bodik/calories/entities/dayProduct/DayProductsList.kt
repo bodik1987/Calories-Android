@@ -24,7 +24,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.bodik.calories.R
 import com.bodik.calories.entities.DayProduct
 import com.bodik.calories.entities.PreferencesHelper
@@ -75,11 +77,14 @@ fun DayProductsList(
                                     .fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Text("${it.product.title}, ${it.weight} ${stringResource(id = R.string.weight_format)}")
+                                Text(
+                                    "${it.product.title}, ${it.weight} ${stringResource(id = R.string.weight_format)}",
+                                    style = TextStyle(fontSize = 18.sp)
+                                )
                                 Text(
                                     calculateDayProductCalories(it),
                                     modifier = Modifier
-                                        .padding(start = 8.dp),
+                                        .padding(start = 8.dp), style = TextStyle(fontSize = 18.sp)
                                 )
                             }
                         },

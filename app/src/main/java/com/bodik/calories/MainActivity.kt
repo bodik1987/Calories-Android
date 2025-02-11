@@ -65,6 +65,9 @@ import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import com.bodik.calories.uiComponents.Backup
 
 class MainActivity : AppCompatActivity() {
@@ -216,7 +219,7 @@ fun App(modifier: Modifier) {
                                 id = R.string.calories_exceeded
                             )
                         } ${if (isTargetExceeded) remainingCalories.roundToInt() else -1 * remainingCalories.roundToInt()}",
-                        modifier = Modifier.padding(end = 12.dp)
+                        modifier = Modifier.padding(end = 12.dp), fontWeight = FontWeight.Medium
                     )
                 },
                 scrollBehavior = if (!isTouchExplorationEnabled) scrollBehaviorTopBar else null,
@@ -239,13 +242,23 @@ fun App(modifier: Modifier) {
                                 onClick = {
                                     preferencesHelper.updateSelectedDay(day)
                                     selectedDay = day
-                                }) { Text(text = buttonText) }
+                                }) {
+                                Text(
+                                    text = buttonText,
+                                    style = TextStyle(fontSize = 18.sp),
+                                    fontWeight = FontWeight.Medium
+                                )
+                            }
                         } else {
                             FilledTonalButton(onClick = {
                                 preferencesHelper.updateSelectedDay(day)
                                 selectedDay = day
                             }) {
-                                Text(text = buttonText)
+                                Text(
+                                    text = buttonText,
+                                    style = TextStyle(fontSize = 18.sp),
+                                    fontWeight = FontWeight.Medium
+                                )
                             }
                         }
                     }
