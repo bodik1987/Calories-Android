@@ -15,6 +15,7 @@ import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -112,7 +113,8 @@ fun AddProductToDayProducts(
                         shape = RoundedCornerShape(12.dp),
                         label = { Text(stringResource(id = R.string.product_weight)) },
                         suffix = { Text(stringResource(id = R.string.weight_format)) },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                        textStyle = LocalTextStyle.current.copy(fontSize = 18.sp),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     )
 
                     Row(

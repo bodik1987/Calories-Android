@@ -54,17 +54,17 @@ fun ProductsList(
         modifier = Modifier.fillMaxSize()
     ) {
         groupedProducts.forEach { (initial, products) ->
-            stickyHeader {
-                if (!showFavorites) Text(
-                    text = initial.toString(),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.surfaceContainerLow)
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                )
-            }
+//            stickyHeader {
+//                if (!showFavorites) Text(
+//                    text = initial.toString(),
+//                    style = MaterialTheme.typography.titleMedium,
+//                    color = MaterialTheme.colorScheme.primary,
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .background(MaterialTheme.colorScheme.surfaceContainerLow)
+//                        .padding(horizontal = 16.dp, vertical = 8.dp)
+//                )
+//            }
 
             items(products) { product ->
                 ListItem(

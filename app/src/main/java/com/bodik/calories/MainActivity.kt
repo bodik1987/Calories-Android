@@ -62,11 +62,14 @@ import com.bodik.calories.uiComponents.UserMeasurements
 import java.util.Calendar
 import kotlin.math.roundToInt
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Refresh
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.bodik.calories.uiComponents.Backup
 
@@ -98,8 +101,8 @@ fun App(modifier: Modifier) {
         val am = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
         am.isEnabled && am.isTouchExplorationEnabled
     }
-    val scrollBehavior = BottomAppBarDefaults.exitAlwaysScrollBehavior()
-    val scrollBehaviorTopBar = TopAppBarDefaults.pinnedScrollBehavior()
+//    val scrollBehavior = BottomAppBarDefaults.exitAlwaysScrollBehavior()
+//    val scrollBehaviorTopBar = TopAppBarDefaults.pinnedScrollBehavior()
     val openCleanDayDialog = remember { mutableStateOf(false) }
     val openBackupDialog = remember { mutableStateOf(false) }
     val openUserMeasurements = remember { mutableStateOf(false) }
@@ -140,9 +143,9 @@ fun App(modifier: Modifier) {
                         openBottomSheet.value = true
                     }
                 }
-            }
-            .nestedScroll(scrollBehavior.nestedScrollConnection)
-            .nestedScroll(scrollBehaviorTopBar.nestedScrollConnection),
+            },
+//            .nestedScroll(scrollBehavior.nestedScrollConnection)
+//            .nestedScroll(scrollBehaviorTopBar.nestedScrollConnection),
         topBar = {
             TopAppBar(
                 title = {
@@ -156,10 +159,11 @@ fun App(modifier: Modifier) {
                     IconButton(onClick = { expanded = true }) {
                         Icon(
                             imageVector = Icons.Filled.Menu,
-                            contentDescription = "Localized description"
+                            contentDescription = "Menu"
                         )
                     }
                     DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                        // HorizontalDivider()
                         DropdownMenuItem(
                             text = { Text(stringResource(id = R.string.user_measurements)) },
                             onClick = {
@@ -173,9 +177,6 @@ fun App(modifier: Modifier) {
                                 )
                             }
                         )
-
-//                        HorizontalDivider()
-
                         DropdownMenuItem(
                             text = { Text(stringResource(id = R.string.change_language)) },
                             onClick = {
@@ -213,16 +214,17 @@ fun App(modifier: Modifier) {
                         totalCalories.toDoubleOrNull() ?: 0.0
                     val remainingCalories = targetCalories - totalCaloriesValue
                     val isTargetExceeded = remainingCalories >= 0
+
                     Text(
                         "${
                             if (isTargetExceeded) stringResource(id = R.string.calories_remaining) else stringResource(
                                 id = R.string.calories_exceeded
                             )
                         } ${if (isTargetExceeded) remainingCalories.roundToInt() else -1 * remainingCalories.roundToInt()}",
-                        modifier = Modifier.padding(end = 12.dp), fontWeight = FontWeight.Medium
+                        modifier = Modifier.padding(end = 12.dp),
                     )
                 },
-                scrollBehavior = if (!isTouchExplorationEnabled) scrollBehaviorTopBar else null,
+//                scrollBehavior = if (!isTouchExplorationEnabled) scrollBehaviorTopBar else null,
             )
         },
         bottomBar = {
@@ -238,7 +240,7 @@ fun App(modifier: Modifier) {
 
                         if (isSelected) {
                             Button(
-                                modifier = Modifier.padding(horizontal = 8.dp),
+                                modifier = Modifier.padding(start = 8.dp),
                                 onClick = {
                                     preferencesHelper.updateSelectedDay(day)
                                     selectedDay = day
@@ -250,10 +252,12 @@ fun App(modifier: Modifier) {
                                 )
                             }
                         } else {
-                            FilledTonalButton(onClick = {
-                                preferencesHelper.updateSelectedDay(day)
-                                selectedDay = day
-                            }) {
+                            FilledTonalButton(modifier =
+                            Modifier.padding(start = 8.dp),
+                                onClick = {
+                                    preferencesHelper.updateSelectedDay(day)
+                                    selectedDay = day
+                                }) {
                                 Text(
                                     text = buttonText,
                                     style = TextStyle(fontSize = 18.sp),
@@ -262,24 +266,30 @@ fun App(modifier: Modifier) {
                             }
                         }
                     }
-                    if (todayDayProducts.isNotEmpty()) TextButton(onClick = {
-                        openCleanDayDialog.value = true
-                    }) {
-                        Text(stringResource(id = R.string.clear))
+                    if (todayDayProducts.isNotEmpty())
+                        FilledTonalButton(
+                            modifier = Modifier.padding(horizontal = 8.dp),
+                            onClick = {
+                                openCleanDayDialog.value = true
+                            }) {
+//                        Text(stringResource(id = R.string.clear))
+                            Icon(
+                                Icons.Outlined.Delete,
+                                contentDescription = null
+                            )
 
-                        CleanDay(
-                            isOpen = openCleanDayDialog,
-                            restDayProducts = restDayProducts,
-                            preferencesHelper = preferencesHelper,
-                            dayProductsState = dayProductsState
-                        )
-                    }
+                            CleanDay(
+                                isOpen = openCleanDayDialog,
+                                restDayProducts = restDayProducts,
+                                preferencesHelper = preferencesHelper,
+                                dayProductsState = dayProductsState
+                            )
+                        }
                 },
                 modifier = Modifier,
-                scrollBehavior = if (!isTouchExplorationEnabled) scrollBehavior else null,
+//                scrollBehavior = if (!isTouchExplorationEnabled) scrollBehavior else null,
             )
         },
-
         floatingActionButton = {
             FloatingActionButton(
                 modifier = Modifier.offset(y = 4.dp),

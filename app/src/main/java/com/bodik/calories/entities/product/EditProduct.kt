@@ -15,6 +15,7 @@ import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -97,6 +98,7 @@ fun EditProduct(
                             .focusRequester(focusRequester),
                         singleLine = true,
                         shape = RoundedCornerShape(12.dp),
+                        textStyle = LocalTextStyle.current.copy(fontSize = 18.sp),
                         label = { Text(stringResource(id = R.string.product_name)) },
                     )
                     Spacer(modifier = Modifier.height(8.dp))
@@ -113,6 +115,7 @@ fun EditProduct(
                         modifier = Modifier
                             .fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
+                        textStyle = LocalTextStyle.current.copy(fontSize = 18.sp),
                         label = { Text(stringResource(id = R.string.calories)) },
                         suffix = { Text(stringResource(id = R.string.weight_format)) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)

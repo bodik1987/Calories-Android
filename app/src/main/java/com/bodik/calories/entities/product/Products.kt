@@ -16,6 +16,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -29,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.bodik.calories.R
 import com.bodik.calories.entities.DayProduct
 import com.bodik.calories.entities.PreferencesHelper
@@ -65,6 +67,7 @@ fun Products(
                 .padding(end = 8.dp),
             shape = RoundedCornerShape(16.dp),
             label = { Text(stringResource(id = R.string.search)) },
+            textStyle = LocalTextStyle.current.copy(fontSize = 18.sp),
             leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
             trailingIcon = {
                 if (searchQuery.length > 1) {

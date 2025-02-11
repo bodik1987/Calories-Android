@@ -28,7 +28,7 @@
     <string name="in_favorites">W ulubionych</string>
     <string name="add">Dodaj</string>
     <string name="product_weight">Waga produktu</string>
-    <string name="weight_format">g.</string>
+    <string name="weight_format">g</string>
     <string name="delete">Usuń</string>
     <string name="delete_product">Usuń produkt</string>
     <string name="delete_product_confirmation">Czy na pewno chcesz usunąć produkt?</string>
@@ -36,6 +36,6 @@
     <string name="update">Aktualizuj</string>
     <string name="empty_list">Lista jest pusta</string>
     <string name="backup">Kopia zapasowa</string>
-    
+
     <string name="fresh_cabbage">Świeża kapusta</string>
 </resources>

@@ -16,6 +16,7 @@ import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -99,6 +100,7 @@ fun UserMeasurements(isOpen: MutableState<Boolean>, preferencesHelper: Preferenc
                             },
                             modifier = Modifier.weight(1f),
                             shape = RoundedCornerShape(12.dp),
+                            textStyle = LocalTextStyle.current.copy(fontSize = 18.sp),
                             label = { Text(stringResource(id = R.string.age)) },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                         )
@@ -116,6 +118,7 @@ fun UserMeasurements(isOpen: MutableState<Boolean>, preferencesHelper: Preferenc
                             },
                             modifier = Modifier.weight(1f),
                             shape = RoundedCornerShape(12.dp),
+                            textStyle = LocalTextStyle.current.copy(fontSize = 18.sp),
                             label = { Text(stringResource(id = R.string.weight)) },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                         )

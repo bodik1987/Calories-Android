@@ -28,7 +28,7 @@
     <string name="in_favorites">В избранных</string>
     <string name="add">Добавить</string>
     <string name="product_weight">Вес продукта</string>
-    <string name="weight_format">г.</string>
+    <string name="weight_format">г</string>
     <string name="delete">Удалить</string>
     <string name="delete_product">Удалить продукт</string>
     <string name="delete_product_confirmation">Вы уверены, что хотите удалить продукт?</string>
